@@ -1,0 +1,27 @@
+/* Celulares (hasta 768px) */
+@media (max-width: 768px) {
+    .grid-container {
+      grid-template-columns: 1fr;
+    }
+  
+    .flex-container {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+  
+  /* Tablets (768px - 1024px) */
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .grid-container {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  /* PC (más de 1024px) */
+  @media (min-width: 1025px) {
+    .grid-container {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+/*NOTA: Usa max-width para móviles y min-width para tablets y PC.*/

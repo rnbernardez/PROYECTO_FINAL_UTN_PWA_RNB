@@ -1,0 +1,49 @@
+/* Reseteo básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #ffffff;
+    color: #333333;
+  }
+
+  :root {
+    --primary-color: #1a73e8;
+    --secondary-color: #fbbc05;
+    --text-color: #333333;
+    --background-color: #ffffff;
+  }
+  
+  h1, h2, h3 {
+    color: var(--primary-color);
+  }
+  
+  button {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: darken(var(--primary-color), 10%);
+  }
+
+  /* Enlaces */
+  a {
+    text-decoration: none;
+    color: #007bff;
+  }
+  
+  /* Contenedor principal */
+  .container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
