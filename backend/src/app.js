@@ -1,10 +1,15 @@
 import express from 'express'
+import cors from 'cors'
 import ENVIROMENT from './config/enviromentconfig.js';
 import userRouter from './routes/userRouter.js';
 import shopRouter from './routes/shopRouter.js';
 import cartRouter from './routes/cartRouter.js';
+import connectToMongoDB from './config/MongoDBconfig.js';
+
+connectToMongoDB();
 
 const app = express();
+app.use(cors())
 app.use(express.json());
 
 app.use('/api/user', userRouter);
