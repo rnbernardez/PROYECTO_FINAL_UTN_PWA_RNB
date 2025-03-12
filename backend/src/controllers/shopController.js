@@ -10,8 +10,23 @@ const shopController = async (req, res) => {
     }
 };
 
-const productController = (req, res) => {
-    res.send("product")
+const productController = async (req, res) => {
+    try {
+        const { _id } = req.params; // Obtener el id del producto desde los parámetros de la URL
+
+        // Buscar el producto en la base de datos por su ID
+        const product = await Product.findById(_id);
+
+        // Si no se encuentra el producto, devolver un error
+        if (!product) {
+            return res.status(404).json({ error: 'Producto no encontrado' });
+        }
+
+        // Si se encuentra el producto, devolverlo en la respuesta
+        return res.status(200).json(product);
+    } catch (error) {
+        return res.status(500).json({ error: 'Error al obtener el producto' });
+    }
 }
 
 const addProductController = async (req, res) => {
