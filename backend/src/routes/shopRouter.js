@@ -3,9 +3,8 @@ import { shopController, productController, addProductController } from "../cont
 
 const shopRouter = express.Router();
 
-shopRouter.post("/shop", shopController)
-shopRouter.post("/product/:_id", productController); /* OJO ACA!*/
-shopRouter.get("/add-product", addProductController);
-
+shopRouter.get("/", shopController);
+shopRouter.get("/product/:_id", productController);
+shopRouter.post("/add-product", addProductController); 
 
 export default shopRouter;
