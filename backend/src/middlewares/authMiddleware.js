@@ -17,7 +17,7 @@ export const authMiddleware = (request, response, next) => {
         }
 
         try {
-            const user_info = jwt.verify(authorization_token, ENVIROMENT.SECRET_KEY_JWT);
+            const user_info = jwt.verify(authorization_token, ENVIROMENT.JWT_SECRET_KEY);
             request.user = user_info;
             next();
         } catch (error) {
