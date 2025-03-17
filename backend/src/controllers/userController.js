@@ -1,7 +1,7 @@
 import User, { USER_PROPS } from "../models/userModel.js"
 import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
 
-dotenv.config();
 
 const loginController = async (req, res) => {
     try {
@@ -28,7 +28,7 @@ const loginController = async (req, res) => {
         // Generar el token JWT
         const token = jwt.sign(
             { userId: user._id, email: user.email, username: user.username },
-            process.env.JWT_SECRET,
+            process.env.JWT_SECRET_KEY,
             { expiresIn: process.env.JWT_EXPIRES_IN }
         );
 
@@ -90,8 +90,26 @@ const registerController = async (req, res) => {
     }
 };
 
-const profileController = (req, res) => {
-    res.send("profile")
-}
+const profileController = async (req, res) => {
+    try {
+        // Obtenemos el usuario desde req.user (ya decodificado en el middleware)
+        const userId = req.user.id; 
+
+        // Buscamos el usuario en la base de datos, excluyendo la contraseña
+        const user = await User.findById(userId).select("-password");
+
+        if (!user) {
+            return res.status(404).json({ ok: false, message: "Usuario no encontrado" });
+        }
+
+        return res.json({
+            ok: true,
+            message: "Perfil obtenido correctamente",
+            user
+        });
+    } catch (error) {
+        return res.status(500).json({ ok: false, message: "Error al obtener el perfil" });
+    }
+};
 
 export { loginController, registerController, profileController }

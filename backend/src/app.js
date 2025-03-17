@@ -5,7 +5,9 @@ import userRouter from './routes/userRouter.js';
 import shopRouter from './routes/shopRouter.js';
 import cartRouter from './routes/cartRouter.js';
 import connectToMongoDB from './config/MongoDBconfig.js';
+import dotenv from 'dotenv';
 
+dotenv.config();
 connectToMongoDB();
 
 const app = express();

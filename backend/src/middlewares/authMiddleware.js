@@ -1,5 +1,5 @@
-import ENVIROMENT from "../config/enviroment.config.js";
-import { ServerError } from "../utils/errors.utils.js";
+import ENVIROMENT from "../config/enviromentconfig.js";
+import { ServerError } from "../utils/error.utils.js";
 import jwt from 'jsonwebtoken';
 
 export const authMiddleware = (request, response, next) => {
