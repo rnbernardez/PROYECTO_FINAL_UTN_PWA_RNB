@@ -1,43 +1,32 @@
-import ENVIROMENT from "../config/enviromentconfig.js";
-import { ServerError } from "../utils/error.utils.js";
-import jwt from 'jsonwebtoken';
+import { ServerError, handleError } from "../utils/error.utils.js";
+import { verifyToken } from "../utils/token.utils.js";
 
 export const authMiddleware = (request, response, next) => {
     try {
         const authorization_header = request.headers['authorization'];
 
+        // Verificar si el header de autorización está presente
         if (!authorization_header) {
             throw new ServerError('No has proporcionado un header de autorización', 401);
         }
 
+        // Extraer el token
         const authorization_token = authorization_header.split(' ')[1];
 
+        // Verificar si el token está presente
         if (!authorization_token) {
             throw new ServerError('No has proporcionado un token de autorización', 401);
         }
 
-        try {
-            const user_info = jwt.verify(authorization_token, ENVIROMENT.JWT_SECRET_KEY);
-            request.user = user_info;
-            next();
-        } catch (error) {
-            throw new ServerError('Token inválido o vencido', 400);
-        }
+        // Verificar la validez del token y obtener la información del usuario
+        const user_info = verifyToken(authorization_token);
+
+        // Asignar la información del usuario al objeto request
+        request.user = user_info;
+
+        // Pasar al siguiente middleware o controlador
+        next();
     } catch (error) {
-        console.log("Error al autenticar:", error.message);
-
-        if (error.status) {
-            return response.json({
-                ok: false,
-                status: error.status,
-                message: error.message
-            });
-        }
-
-        response.json({
-            status: 500,
-            ok: false,
-            message: "Internal server error"
-        });
+        handleError(response, error);
     }
 };
