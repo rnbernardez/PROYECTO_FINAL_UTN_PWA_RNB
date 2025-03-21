@@ -5,8 +5,14 @@ const findCartByUserId = async (userId) => {
 };
 
 const createCart = async (userId) => {
-    const newCart = new Cart({ user: userId, products: [] });
-    return await newCart.save();
+    let existingCart = await Cart.findOne({ user: userId });
+    
+    if (!existingCart) {
+        existingCart = new Cart({ user: userId, products: [] });
+        await existingCart.save();
+    }
+
+    return existingCart;
 };
 
 const addCardToUser = async (userId, cardData) => {
@@ -18,12 +24,12 @@ const addCardToUser = async (userId, cardData) => {
 };
 
 const getUserCart = async (userId) => {
-    const cart = await Cart.findOne({ user: userId });
+    const cart = await Cart.findOne({ user: userId }).populate("products.productId");
 
     if (!cart) return null;
 
-    // Calcular el total de la compra
-    const total = cart.products.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    // Calcular el total usando los datos poblados
+    const total = cart.products.reduce((acc, item) => acc + (item.productId.price * item.quantity), 0);
 
     return { cart, total };
 };

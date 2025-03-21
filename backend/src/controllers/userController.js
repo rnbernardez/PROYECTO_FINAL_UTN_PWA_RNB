@@ -24,7 +24,11 @@ const loginController = async (req, res) => {
 
         const token = generateToken(user);
 
-        return res.status(200).json({ ok: true, token, userId: user._id, username: user.username });
+        return res.status(200).json({ 
+            ok: true, 
+            token, 
+            userId: user._id, 
+            message: 'Inicio de sesion exitoso'});
     } catch (error) {
         return res.status(500).json({ ok: false, message: 'Error al autenticar', error: error.message });
     }
@@ -55,7 +59,7 @@ export const registerController = async (req, res) => {
 
         const hashedPassword = await hashData(password);
         const hashedAddress = await hashData(address);
-
+        
         const userData = {
             email,
             username,
@@ -80,7 +84,7 @@ const profileController = async (req, res) => {
     try {
         const userId = req.user.id; 
 
-        const user = await findUserById(userId);
+        const user = await findUserById(userId).select('-password');
 
         if (!user) {
             return res.status(404).json({ ok: false, message: "Usuario no encontrado" });

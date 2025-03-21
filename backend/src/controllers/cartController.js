@@ -44,10 +44,12 @@ export const addCardController = async (req, res) => {
   export const checkoutController = async (req, res) => {
     try {
         const userId = req.user.id;
+
+        // Obtener los productos y el total del carrito
         const cartData = await getUserCart(userId);
 
-        if (!cartData) {
-            return res.status(404).json({ ok: false, message: "Carrito no encontrado" });
+        if (!cartData || !cartData.cart) {
+            return res.status(404).json({ ok: false, message: "Carrito no encontrado o vacío" });
         }
 
         return res.status(200).json({ ok: true, cart: cartData.cart, total: cartData.total });
@@ -60,6 +62,8 @@ export const addCardController = async (req, res) => {
   export const purchaseOkController = async (req, res) => {
     try {
         const userId = req.user.id;
+
+        // Vaciar el carrito después de la compra
         const updatedCart = await clearUserCart(userId);
 
         if (!updatedCart) {

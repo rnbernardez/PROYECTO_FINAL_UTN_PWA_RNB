@@ -31,12 +31,14 @@ const UserSchema = new mongoose.Schema(
         [USER_PROPS.EMAIL]: { 
             type: String, 
             required: true, 
-            unique: true 
+            unique: true,
+            match: [/^\S+@\S+\.\S+$/, 'Por favor, ingresa un email válido']
         },
         [USER_PROPS.USERNAME]: { 
             type: String, 
             required: true, 
-            unique: true 
+            unique: true,
+            trim: true // 🔥 Elimina espacios antes y después del nombre
         },
         [USER_PROPS.PASSWORD]: {
             type: String, 
@@ -84,7 +86,15 @@ const UserSchema = new mongoose.Schema(
     },
 );
 
-UserSchema.pre('save', hashUserMiddleware);
+UserSchema.pre('save', function (next) {
+    // Si el usuario no es nuevo, actualizamos el campo 'modified_at'
+    if (!this.isNew) {
+        this[USER_PROPS.MODIFIED_AT] = Date.now();  // Establece la fecha de modificación
+    }
+    // Ejecuta el middleware de hash para la contraseña
+    hashUserMiddleware.call(this, next);
+});
+
 const User = mongoose.model('User', UserSchema);
 export default User;
 

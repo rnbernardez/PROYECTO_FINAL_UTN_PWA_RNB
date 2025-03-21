@@ -1,19 +1,10 @@
 import mongoose from 'mongoose';
 
 const CartItemSchema = new mongoose.Schema({
-  product: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Product', 
-    required: true 
-  },
-  name: { 
-    type: String, 
-    required: true 
-  },
-  price: { 
-    type: Number, 
-    required: true,
-    min: 0 
+  productId: { // 🔥 Cambiamos 'product' a 'productId'
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product',
+    required: true
   },
   quantity: { 
     type: Number, 
@@ -27,9 +18,9 @@ const CartSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
-    unique: true // Cada usuario tiene un único carrito
+    unique: true 
   },
-  products: [CartItemSchema] // Array de items del carrito
+  products: [CartItemSchema] // 🔥 Se elimina `name` y `price`, porque ahora los obtenemos con `populate`
 });
 
 const Cart = mongoose.model('Cart', CartSchema);
