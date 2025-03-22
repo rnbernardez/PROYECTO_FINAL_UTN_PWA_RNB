@@ -2,7 +2,7 @@ import User, { USER_PROPS } from "../models/userModel.js"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import { comparePasswords, generateToken, hashData } from "../utils/auth.utils.js"
-import { findUserByEmail, createUser, findUserById } from '../repositories/userRepository.js';
+import { findUserByEmail, createUser, findUserById } from '../repository/userRepository.js';
 
 const loginController = async (req, res) => {
     try {
@@ -34,7 +34,7 @@ const loginController = async (req, res) => {
     }
 };
 
-export const registerController = async (req, res) => {
+const registerController = async (req, res) => {
     try {
         const {
             email,
