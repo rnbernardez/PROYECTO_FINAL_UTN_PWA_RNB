@@ -14,8 +14,6 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Navigate to={user ? "/user/profile" : "/home"} />} />
-      {/* Redirección de "/" a "/home" */}
-      <Route path="/" element={<Navigate to="/home" />} />
       <Route path="/home" element={<HomeScreen />} />
 
       {/* Rutas de Usuario */}

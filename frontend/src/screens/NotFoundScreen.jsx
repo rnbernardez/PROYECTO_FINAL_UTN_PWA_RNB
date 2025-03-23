@@ -1,9 +1,16 @@
-import React from 'react'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import '../styles/NotFoundScreenCSS.css';
 
 const NotFoundScreen = () => {
   return (
-    <div>NotFoundScreen</div>
-  )
-}
+    <div className="not-found-container">
+      <h1>404</h1>
+      <h2>Página no encontrada</h2>
+      <p>Lo sentimos, la página que buscas no existe o ha sido movida.</p>
+      <Link to="/home" className="btn-back-home">Volver al inicio</Link>
+    </div>
+  );
+};
 
-export default NotFoundScreen
+export default NotFoundScreen;

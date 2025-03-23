@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';  // Para redirigir después del registro
+import api from '../api/api.js';  // Importamos la configuración de la API
 
 const RegisterScreen = () => {
+    const navigate = useNavigate();  // Usamos navigate para redirigir después de un registro exitoso
+
     const formInitialState = {
         username: '',
         email: '',
@@ -8,6 +12,9 @@ const RegisterScreen = () => {
     };
 
     const [formState, setFormState] = useState(formInitialState);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
 
     // Manejar cambios en los inputs
     const handleChange = (e) => {
@@ -20,35 +27,42 @@ const RegisterScreen = () => {
     // Manejar envío del formulario
     const handleSubmit = async (e) => {
         e.preventDefault(); // Prevenir recarga de página
+        setError(null);  // Limpiar errores previos
+        setSuccess(null);  // Limpiar mensaje de éxito
+
+        setLoading(true);  // Activar loading mientras se hace la solicitud
 
         try {
-            const response = await fetch('http://localhost:5000/api/user/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formState)
-            });
+            const response = await api.post('/user/register', formState);
 
-            const data = await response.json();
+            if (response.status === 201) {
+                setSuccess('Registro exitoso');  // Mostrar mensaje de éxito
+                setFormState(formInitialState);  // Limpiar el formulario
+                setLoading(false);
 
-            if (response.ok) {
-                console.log('Registro exitoso:', data);
-                alert('Registro exitoso');
-                setFormState(formInitialState); // Limpiar el formulario
-            } else {
-                console.error('Error en el registro:', data.message);
-                alert(`Error: ${data.message}`);
+                // Redirigir al usuario al login o home
+                navigate('/user/login');
             }
         } catch (error) {
-            console.error('Error en la conexión:', error);
-            alert('Error en la conexión');
+            setLoading(false);  // Desactivar loading
+
+            // Manejo de errores desde la respuesta de la API
+            if (error.response && error.response.data) {
+                setError(error.response.data.message || 'Error en el registro');
+            } else {
+                setError('Error en la conexión');
+            }
         }
     };
 
     return (
         <div>
-            <h1>Registrate en nuestra App</h1>
+            <h1>Regístrate en nuestra Tienda</h1>
+
+            {/* Mostrar mensaje de éxito o error */}
+            {success && <p style={{ color: 'green' }}>{success}</p>}
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+
             <form onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="username">Username</label>
@@ -86,7 +100,9 @@ const RegisterScreen = () => {
                         required
                     />
                 </div>
-                <button type="submit">Registrar</button>
+                <button type="submit" disabled={loading}>
+                    {loading ? 'Registrando...' : 'Registrar'}
+                </button>
             </form>
         </div>
     );

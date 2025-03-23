@@ -1,45 +1,80 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { api } from "../api/api";
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { login } from '../../services/apiService';  // Servicio para manejar la autenticación
+import '../styles/LoginScreen.css';  // Puedes agregar los estilos que prefieras
 
 const LoginScreen = () => {
-  const [formData, setFormData] = useState({ email: "", password: "" });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();  // Para redirigir al usuario después de un login exitoso
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
+  // Maneja el envío del formulario de login
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
 
     try {
-      const response = await api.post("/auth/login", formData);
-      localStorage.setItem("token", response.data.token);
-      alert("Login exitoso");
-      navigate("/user/successful-login");
-    } catch (error) {
-      setError(error.response?.data?.message || "Error en el login");
-    } finally {
-      setLoading(false);
+      const response = await login({ email, password });
+
+      // Si el login es exitoso, guardamos el token en el localStorage
+      localStorage.setItem('token', response.data.token);
+
+      // Redirigimos al usuario al perfil o a una página específica
+      navigate('/user/profile');
+    } catch (err) {
+      // Si ocurre un error, mostramos el mensaje
+      setError(err.response?.data?.message || 'Error al iniciar sesión. Intenta nuevamente.');
     }
   };
 
   return (
-    <div>
-      <h2>Iniciar Sesión</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
-        <input type="password" name="password" placeholder="Contraseña" onChange={handleChange} required />
-        <button type="submit" disabled={loading}>
-          {loading ? "Cargando..." : "Ingresar"}
-        </button>
-      </form>
+    <div className="login-screen">
+      <header>
+        <h1>Iniciar Sesión</h1>
+        <p>Accede a tu cuenta para continuar</p>
+      </header>
+
+      <section>
+        <form onSubmit={handleSubmit} className="login-form">
+          <div className="form-group">
+            <label htmlFor="email">Correo electrónico</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              placeholder="Ingresa tu correo"
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="password">Contraseña</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder="Ingresa tu contraseña"
+            />
+          </div>
+
+          {error && <div className="error-message">{error}</div>}
+
+          <button type="submit">Iniciar sesión</button>
+        </form>
+
+        <p className="register-link">
+          ¿No tienes cuenta? <Link to="/user/register">Regístrate aquí</Link>
+        </p>
+      </section>
+
+      <footer>
+        <p>&copy; 2025 Tienda Online. Todos los derechos reservados.</p>
+      </footer>
     </div>
   );
 };
