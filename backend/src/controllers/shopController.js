@@ -1,15 +1,16 @@
 import Product, { PRODUCT_PROPS } from "../models/productModel.js"
 import { ServerError } from "../utils/error.utils.js";
-import { getAllProducts, getProductById, createProduct } from "../repository/shopRepository.js";
+import { getLatestProducts, getProductById, createProduct } from "../repository/shopRepository.js";
 
 const shopController = async (req, res) => {
     try {
-        const products = await getAllProducts();
-        return res.status(200).json(products);
+      const products = await getLatestProducts(); // Usamos la nueva función
+      return res.status(200).json(products);
     } catch (error) {
-        throw new ServerError(error.message, 500);
+      console.error("Error al obtener productos:", error);
+      return res.status(500).json({ error: "Error al obtener los productos" });
     }
-};
+  };
 
 const productController = async (req, res) => {
     try {
@@ -30,6 +31,8 @@ const addProductController = async (req, res) => {
     try {
         // Desestructuramos los datos del body
         const { name, category, sub_category, price, description, stock, images } = req.body;
+        const { userId } = req.user;
+        
         const categories = {
             'De Rio': ['Trucha', 'Bagre', 'Carpa', 'Dorado', 'Surubi', 'Boga', 'Pacú', 'Pejerrey', 'Otro'],
             'De Mar': ['Atún', 'Merluza', 'Salmón', 'Lenguado', 'Corvina', 'Pez Espada', 'Bonito', 'Otro']
@@ -58,7 +61,8 @@ const addProductController = async (req, res) => {
             [PRODUCT_PROPS.PRICE]: price,
             [PRODUCT_PROPS.DESCRIPTION]: description,
             [PRODUCT_PROPS.STOCK]: stock,
-            [PRODUCT_PROPS.IMAGES]: images || []
+            [PRODUCT_PROPS.IMAGES]: images || [],
+            createdBy: userId
         };
 
         // Crear el producto utilizando el repositorio
@@ -104,11 +108,17 @@ const updateProductController = async (req, res) => {
 const deleteProductController = async (req, res) => {
     try {
         const { _id } = req.params;
+        const { userId } = req.user; // Asumiendo que el middleware de autenticación establece req.user
 
         // Validar que el producto existe
         const product = await Product.findById(_id);
         if (!product) {
             return res.status(404).json({ error: 'Producto no encontrado' });
+        }
+
+        // Verificar si el usuario autenticado es el creador del producto
+        if (product.createdBy.toString() !== userId) {
+            return res.status(403).json({ error: 'No tienes permiso para eliminar este producto' });
         }
 
         // Eliminar el producto
