@@ -52,10 +52,20 @@ const checkoutController = async (req, res) => {
             return res.status(404).json({ ok: false, message: "Carrito no encontrado o vacío" });
         }
 
-        return res.status(200).json({ ok: true, cart: cartData.cart, total: cartData.total });
+        // Simular la compra (Aquí podríamos agregar más lógica en el futuro)
+        const total = cartData.total;
+
+        // Vaciar el carrito después de la compra
+        await clearUserCart(userId);
+
+        return res.status(200).json({ 
+            ok: true, 
+            message: "Compra realizada con éxito", 
+            total 
+        });
     } catch (error) {
         console.error("Error en checkout:", error);
-        return res.status(500).json({ ok: false, message: "Error al obtener el resumen del carrito", error: error.message });
+        return res.status(500).json({ ok: false, message: "Error al procesar la compra", error: error.message });
     }
 };
 
