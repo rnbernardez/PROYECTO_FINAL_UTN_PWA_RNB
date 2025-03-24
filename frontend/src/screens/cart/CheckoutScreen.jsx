@@ -12,14 +12,31 @@ const CheckoutScreen = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      
+  
+      // Hacer el checkout
       const response = await api.post("/cart/checkout", {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
-
-      alert(response.data.message);
-      fetchCart(); // Vaciar el carrito en frontend
-      navigate("/cart/purchaseok"); // Redirigir a pantalla de éxito
+  
+      // Si la respuesta es exitosa, vaciar el carrito en el backend
+      if (response.data.ok) {
+        try {
+          // Vaciar el carrito en el backend
+          await api.delete("/cart/clear", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+  
+          fetchCart(); // Actualizar el carrito en el contexto
+  
+          alert(response.data.message);
+          navigate("/cart/purchaseok"); // Redirigir a la pantalla de éxito
+        } catch (clearError) {
+          console.error("Error al vaciar el carrito", clearError);
+          alert("Hubo un problema al vaciar el carrito");
+        }
+      } else {
+        alert("Hubo un problema con la compra");
+      }
     } catch (error) {
       console.error("Error en el checkout", error);
       alert("Hubo un problema con la compra");
