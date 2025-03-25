@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { login } from '../../services/apiService';  // Servicio para manejar la autenticación
-import '../styles/LoginScreen.css';  // Puedes agregar los estilos que prefieras
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
