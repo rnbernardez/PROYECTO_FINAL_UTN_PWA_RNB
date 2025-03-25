@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { api } from "../api/api";
-import { CartContext } from "../context/CartContext";
+import { CartContext } from "../context/CartContext.js";
 
 const CartScreen = () => {
   const { cart, fetchCart } = useContext(CartContext);
