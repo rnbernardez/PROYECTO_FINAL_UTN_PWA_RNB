@@ -1,4 +1,4 @@
-import api from "./api";
+import api from "../api/api.js";
 
 // Servicios de Autenticación
 export const login = (userData) => api.post("/user/login", userData);
