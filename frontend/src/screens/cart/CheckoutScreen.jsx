@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { api } from "../../api/api.js";
-import { CartContext } from "../context/cartContext.jsx";
+import { CartContext } from "@/context/cartContext.jsx";
 import { useNavigate } from "react-router-dom";
 
 const CheckoutScreen = () => {
