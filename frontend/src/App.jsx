@@ -5,8 +5,8 @@ import NotFoundScreen from './screens/NotFoundScreen';
 import { LoginScreen, RegisterScreen, ProfileScreen, SuccessfulLoginScreen } from './screens/user';
 import { ShopScreen, ProductScreen, AddProductScreen } from './screens/shop'; 
 import { CartScreen, AddCardScreen, CheckoutScreen, PurchaseOkScreen } from './screens/cart';
-import RequireAuth from './components/auth/RequireAuth';
-import ProtectedRoute from './components/auth/ProtectedRoute';
+import RequireAuth from './components/auth/RequireAuth.jsx';
+import ProtectedRoute from './components/auth/ProtectedRoute.jsx';
 import useAuth from './hooks/useAuth';
 
 function App() {
