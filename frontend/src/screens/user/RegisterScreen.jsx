@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';  // Para redirigir después del registro
-import api from '../api/api.js';  // Importamos la configuración de la API
+import { api } from '../../api/api.js';
 
 const RegisterScreen = () => {
     const navigate = useNavigate();  // Usamos navigate para redirigir después de un registro exitoso

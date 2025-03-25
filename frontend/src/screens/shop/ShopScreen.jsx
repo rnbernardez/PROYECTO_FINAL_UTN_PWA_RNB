@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { api } from '../api/api'; // Importamos la API
+import { api } from '../../api/api.js';
 import { Link } from 'react-router-dom'; // Usamos Link para redirigir a la página de detalles del producto
 
 const ShopScreen = () => {
