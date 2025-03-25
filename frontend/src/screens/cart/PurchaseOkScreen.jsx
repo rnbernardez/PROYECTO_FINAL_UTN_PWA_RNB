@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
-import { CartContext } from "../context/CartContext.js";
+import { CartContext } from "../context/CartContext.jsx";
 
 const PurchaseOkScreen = () => {
   const { fetchCart } = useContext(CartContext);
