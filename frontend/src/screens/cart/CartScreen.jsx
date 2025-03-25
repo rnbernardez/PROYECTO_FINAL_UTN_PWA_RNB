@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { api } from "../../api/api.js";
+import api from "../../api/api.js";
 import { CartContext } from "../../context/cartContext.jsx";
 
 const CartScreen = () => {
