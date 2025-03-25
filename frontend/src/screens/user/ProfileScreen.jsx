@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../api/api.js";  // Suponiendo que el servicio API está importado correctamente
-import '../styles/ProfileScreen.css';
 
 const ProfileScreen = () => {
   const [user, setUser] = useState(null);
