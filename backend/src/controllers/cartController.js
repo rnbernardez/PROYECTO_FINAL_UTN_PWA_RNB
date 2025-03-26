@@ -3,59 +3,51 @@ import User, { USER_PROPS } from '../models/userModel.js';
 import { findCartByUserId, createCart, addCardToUser, getUserCart, clearUserCart } from '../repository/cartRepository.js';
 
 const cartController = async (req, res) => {
-  try {
-      const userId = req.user.id; 
+    try {
+        const userId = req.user.id; 
+        let cart = await findCartByUserId(userId);
 
-      // Buscar carrito del usuario
-      let cart = await findCartByUserId(userId);
+        if (!cart) {
+            cart = await createCart(userId);
+        }
 
-      // Si el carrito no existe, crearlo
-      if (!cart) {
-          cart = await createCart(userId);
-      }
-
-      return res.status(200).json({ ok: true, cart });
-  } catch (error) {
-      console.error("Error al obtener el carrito:", error);
-      return res.status(500).json({ ok: false, message: "Error al obtener el carrito", error: error.message });
-  }
+        return res.status(200).json({ ok: true, cart });
+    } 
+    catch (error) {
+        console.error("Error al obtener el carrito:", error);
+        return res.status(500).json({ ok: false, message: "Error al obtener el carrito", error: error.message });
+    }
 };
 
 const addCardController = async (req, res) => {
-  try {
-      const userId = req.user.id;
-      const { cardNumber, expirationDate, cardHolder, cardType } = req.body;
+    try {
+        const userId = req.user.id;
+        const { cardNumber, expirationDate, cardHolder, cardType } = req.body;
 
-      // Validación de campos
-      if (!cardNumber || !expirationDate || !cardHolder || !cardType) {
-          return res.status(400).json({ ok: false, message: "Faltan campos obligatorios para la tarjeta" });
-      }
+        if (!cardNumber || !expirationDate || !cardHolder || !cardType) {
+            return res.status(400).json({ ok: false, message: "Faltan campos obligatorios para la tarjeta" });
+        }
+        const updatedUser = await addCardToUser(userId, { cardNumber, expirationDate, cardHolder, cardType });
 
-      // Agregar la tarjeta usando la función repository
-      const updatedUser = await addCardToUser(userId, { cardNumber, expirationDate, cardHolder, cardType });
-
-      return res.status(200).json({ ok: true, message: "Tarjeta agregada correctamente", cards: updatedUser.cards });
-  } catch (error) {
-      console.error("Error al agregar la tarjeta:", error);
-      return res.status(500).json({ ok: false, message: "Error al agregar la tarjeta", error: error.message });
-  }
+        return res.status(200).json({ ok: true, message: "Tarjeta agregada correctamente", cards: updatedUser.cards });
+    } catch (error) {
+        console.error("Error al agregar la tarjeta:", error);
+        return res.status(500).json({ ok: false, message: "Error al agregar la tarjeta", error: error.message });
+    }
 };
 
 const checkoutController = async (req, res) => {
     try {
         const userId = req.user.id;
 
-        // Obtener los productos y el total del carrito
         const cartData = await getUserCart(userId);
 
         if (!cartData || !cartData.cart) {
             return res.status(404).json({ ok: false, message: "Carrito no encontrado o vacío" });
         }
 
-        // Simular la compra (Aquí podríamos agregar más lógica en el futuro)
         const total = cartData.total;
 
-        // Vaciar el carrito después de la compra
         await clearUserCart(userId);
 
         return res.status(200).json({ 
@@ -73,7 +65,6 @@ const purchaseOkController = async (req, res) => {
     try {
         const userId = req.user.id;
 
-        // Vaciar el carrito después de la compra
         const updatedCart = await clearUserCart(userId);
 
         if (!updatedCart) {
@@ -95,31 +86,24 @@ const addProductToCartController = async (req, res) => {
         if (!productId || !quantity || quantity <= 0) {
             return res.status(400).json({ ok: false, message: "Producto y cantidad válidos son requeridos" });
         }
-
-        // Verificar si el producto existe
         const product = await Product.findById(productId);
         if (!product) {
             return res.status(404).json({ ok: false, message: "Producto no encontrado" });
         }
 
-        // Obtener o crear el carrito del usuario
         let cart = await findCartByUserId(userId);
         if (!cart) {
             cart = await createCart(userId);
         }
 
-        // Verificar si el producto ya está en el carrito
         const existingProductIndex = cart.products.findIndex(item => item.productId.toString() === productId);
         
         if (existingProductIndex !== -1) {
-            // Si el producto ya está en el carrito, aumentar la cantidad
             cart.products[existingProductIndex].quantity += quantity;
         } else {
-            // Si no está, agregarlo
             cart.products.push({ productId, quantity });
         }
 
-        // Guardar cambios en el carrito
         await cart.save();
 
         return res.status(200).json({ ok: true, message: "Producto agregado al carrito", cart });

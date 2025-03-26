@@ -38,7 +38,7 @@ const UserSchema = new mongoose.Schema(
             type: String, 
             required: true, 
             unique: true,
-            trim: true // 🔥 Elimina espacios antes y después del nombre
+            trim: true 
         },
         [USER_PROPS.PASSWORD]: {
             type: String, 
@@ -87,18 +87,12 @@ const UserSchema = new mongoose.Schema(
 );
 
 UserSchema.pre('save', function (next) {
-    // Si el usuario no es nuevo, actualizamos el campo 'modified_at'
+
     if (!this.isNew) {
-        this[USER_PROPS.MODIFIED_AT] = Date.now();  // Establece la fecha de modificación
+        this[USER_PROPS.MODIFIED_AT] = Date.now(); 
     }
-    // Ejecuta el middleware de hash para la contraseña
     hashUserMiddleware.call(this, next);
 });
 
 const User = mongoose.model('User', UserSchema);
 export default User;
-
-/*
-¿Como verificar una contraseña mas tarde?
-const isMatch = await bcrypt.compare(contraseñaIngresada, usuario.password);
-*/

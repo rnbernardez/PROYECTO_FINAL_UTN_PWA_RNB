@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const CartItemSchema = new mongoose.Schema({
-  productId: { // 🔥 Cambiamos 'product' a 'productId'
+  productId: { 
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Product',
     required: true
@@ -20,7 +20,7 @@ const CartSchema = new mongoose.Schema({
     required: true,
     unique: true 
   },
-  products: [CartItemSchema] // 🔥 Se elimina `name` y `price`, porque ahora los obtenemos con `populate`
+  products: [CartItemSchema] 
 });
 
 const Cart = mongoose.model('Cart', CartSchema);

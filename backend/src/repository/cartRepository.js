@@ -28,7 +28,6 @@ const getUserCart = async (userId) => {
 
     if (!cart) return null;
 
-    // Calcular el total usando los datos poblados
     const total = cart.products.reduce((acc, item) => acc + (item.productId.price * item.quantity), 0);
 
     return { cart, total };
