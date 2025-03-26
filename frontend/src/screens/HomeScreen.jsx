@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchAllProducts } from '../services/apiService';
-import '../styles/HomeScreenCSS.css';
 
 const HomeScreen = () => {
   const [products, setProducts] = useState([]);

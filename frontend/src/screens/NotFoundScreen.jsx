@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../styles/NotFoundScreenCSS.css';
 
 const NotFoundScreen = () => {
   return (
