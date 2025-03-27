@@ -15,7 +15,8 @@ function App() {
     <Routes>
       <Route path="/" element={<Navigate to={user ? "/user/profile" : "/home"} />} />
       <Route path="/home" element={<HomeScreen />} />
-
+      <Route path="/verify/:token" element={<VerifyAccountScreen />} />
+      
       {/* Rutas de Usuario */}
       <Route path="/user">
         <Route path="login" element={<LoginScreen />} />
