@@ -4,14 +4,12 @@ const SALT_ROUNDS = 10;
 
 export const hashUserMiddleware = async function (next) {
     try {
-        if (this.isModified('password')) {
+        // Solo hashear si es una modificación y no está ya hasheado
+        if (this.isModified('password') && !this.password.startsWith('$2a$')) {
             this.password = await bcrypt.hash(this.password, SALT_ROUNDS);
-        }
-        if (this.isModified('address')) {
-            this.address = await bcrypt.hash(this.address, SALT_ROUNDS);
         }
         next();
     } catch (error) {
-        next();
+        next(error);
     }
 };

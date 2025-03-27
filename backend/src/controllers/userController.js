@@ -56,7 +56,6 @@ const registerController = async (req, res) => {
             });
         }
 
-        // Verificar usuario existente
         const existingUser = await findUserByEmail(email);
         if (existingUser) {
             return res.status(400).json({ 
@@ -65,19 +64,16 @@ const registerController = async (req, res) => {
             });
         }
 
-        // Hashear solo la contraseña
-        const hashedPassword = await hashData(password);
         const verificationToken = crypto.randomBytes(32).toString("hex");
 
-        // Crear objeto de usuario simplificado
+        // Envía la contraseña en texto plano (el middleware la hasheará)
         const userData = {
             email,
             username,
-            password: hashedPassword,
-            address, // Guardar dirección en texto plano
+            password, // <-- Cambio clave aquí
+            address,
             verified: false,
             verification_token: verificationToken,
-            // Valores por defecto para campos opcionales
             profile_picture: '',
             is_selling: [],
             bought: [],
@@ -85,15 +81,12 @@ const registerController = async (req, res) => {
             cards: []
         };
 
-        // Crear usuario
         const newUser = await createUser(userData);
         
-        // Intentar enviar correo (pero no fallar si hay error)
         try {
             await sendVerificationEmail(email, verificationToken);
         } catch (emailError) {
             console.error("Error enviando correo:", emailError);
-            // No retornes error, solo registra el problema
         }
 
         res.status(201).json({ 
