@@ -1,111 +1,113 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';  // Para redirigir después del registro
+import { useNavigate } from 'react-router-dom';
 import api from '../../api/api.js';
+import Navbar from '../../components/Navbar'; // Importamos la Navbar
 
 const RegisterScreen = () => {
-    const navigate = useNavigate();  // Usamos navigate para redirigir después de un registro exitoso
+  const navigate = useNavigate();
 
-    const formInitialState = {
-        username: '',
-        email: '',
-        password: ''
-    };
+  const formInitialState = {
+    username: '',
+    email: '',
+    password: ''
+  };
 
-    const [formState, setFormState] = useState(formInitialState);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(null);
+  const [formState, setFormState] = useState(formInitialState);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
-    // Manejar cambios en los inputs
-    const handleChange = (e) => {
-        setFormState({
-            ...formState,
-            [e.target.name]: e.target.value
-        });
-    };
+  const handleChange = (e) => {
+    setFormState({
+      ...formState,
+      [e.target.name]: e.target.value
+    });
+  };
 
-    // Manejar envío del formulario
-    const handleSubmit = async (e) => {
-        e.preventDefault(); // Prevenir recarga de página
-        setError(null);  // Limpiar errores previos
-        setSuccess(null);  // Limpiar mensaje de éxito
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+    setSuccess(null);
+    setLoading(true);
 
-        setLoading(true);  // Activar loading mientras se hace la solicitud
+    try {
+      const response = await api.post('/user/register', formState);
 
-        try {
-            const response = await api.post('/user/register', formState);
+      if (response.status === 201) {
+        setSuccess('Registro exitoso');
+        setFormState(formInitialState);
+        setLoading(false);
 
-            if (response.status === 201) {
-                setSuccess('Registro exitoso');  // Mostrar mensaje de éxito
-                setFormState(formInitialState);  // Limpiar el formulario
-                setLoading(false);
+        navigate('/user/login');
+      }
+    } catch (error) {
+      setLoading(false);
+      setError(error.response?.data?.message || 'Error en el registro');
+    }
+  };
 
-                // Redirigir al usuario al login o home
-                navigate('/user/login');
-            }
-        } catch (error) {
-            setLoading(false);  // Desactivar loading
+  return (
+    <>
+      <Navbar />
+      <div className="container d-flex justify-content-center align-items-center min-vh-100">
+        <div className="card p-4 shadow-lg" style={{ maxWidth: '400px', width: '100%' }}>
+          <h2 className="text-center">Regístrate</h2>
+          <p className="text-center text-muted">Crea tu cuenta para comenzar</p>
 
-            // Manejo de errores desde la respuesta de la API
-            if (error.response && error.response.data) {
-                setError(error.response.data.message || 'Error en el registro');
-            } else {
-                setError('Error en la conexión');
-            }
-        }
-    };
+          {success && <div className="alert alert-success">{success}</div>}
+          {error && <div className="alert alert-danger">{error}</div>}
 
-    return (
-        <div>
-            <h1>Regístrate en nuestra Tienda</h1>
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label htmlFor="username" className="form-label">Nombre de usuario</label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                className="form-control"
+                value={formState.username}
+                onChange={handleChange}
+                required
+                placeholder="Escribe tu usuario"
+              />
+            </div>
 
-            {/* Mostrar mensaje de éxito o error */}
-            {success && <p style={{ color: 'green' }}>{success}</p>}
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            <div className="mb-3">
+              <label htmlFor="email" className="form-label">Correo electrónico</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                className="form-control"
+                value={formState.email}
+                onChange={handleChange}
+                required
+                placeholder="tuEmail@correo.com"
+              />
+            </div>
 
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="username">Username</label>
-                    <input
-                        type="text"
-                        placeholder="Escribe tu usuario"
-                        id="username"
-                        name="username"
-                        value={formState.username}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="email">Email</label>
-                    <input
-                        type="email"
-                        placeholder="tuEmail@anymail.com"
-                        id="email"
-                        name="email"
-                        value={formState.email}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="password">Password</label>
-                    <input
-                        type="password"
-                        placeholder="Ingresa tu contraseña"
-                        id="password"
-                        name="password"
-                        value={formState.password}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <button type="submit" disabled={loading}>
-                    {loading ? 'Registrando...' : 'Registrar'}
-                </button>
-            </form>
+            <div className="mb-3">
+              <label htmlFor="password" className="form-label">Contraseña</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                className="form-control"
+                value={formState.password}
+                onChange={handleChange}
+                required
+                placeholder="Ingresa tu contraseña"
+              />
+            </div>
+
+            <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+              {loading ? 'Registrando...' : 'Registrar'}
+            </button>
+          </form>
         </div>
-    );
+      </div>
+    </>
+  );
 };
 
 export default RegisterScreen;

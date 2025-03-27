@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../../api/api.js"; // Suponiendo que el servicio API está importado correctamente
+import api from "../../api/api.js";  
+import Navbar from "../../components/Navbar.jsx";
+import ProfileSidebar from "../../components/ProfileSidebar.jsx";
 
 const ProfileScreen = () => {
   const [user, setUser] = useState(null);
@@ -13,7 +15,6 @@ const ProfileScreen = () => {
   const [formData, setFormData] = useState({ name: "", email: "" });
   const [passwordData, setPasswordData] = useState({ currentPassword: "", newPassword: "" });
 
-  // Obtener datos del perfil
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
@@ -37,17 +38,14 @@ const ProfileScreen = () => {
     }
   }, [token]);
 
-  // Manejar cambios en el formulario de datos generales
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Manejar cambios en el formulario de cambio de contraseña
   const handlePasswordChange = (e) => {
     setPasswordData({ ...passwordData, [e.target.name]: e.target.value });
   };
 
-  // Enviar datos actualizados
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSuccess(null);
@@ -66,7 +64,6 @@ const ProfileScreen = () => {
     }
   };
 
-  // Cambiar contraseña
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     setSuccess(null);
@@ -79,58 +76,60 @@ const ProfileScreen = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setSuccess("Contraseña actualizada correctamente");
-      setPasswordData({ currentPassword: "", newPassword: "" }); // Limpiar campos
+      setPasswordData({ currentPassword: "", newPassword: "" });
     } catch (error) {
       setError(error.response?.data?.message || "Error al cambiar la contraseña");
     }
   };
 
-  // Cerrar sesión
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/home");
-  };
-
-  if (loading) return <p>Cargando...</p>;
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
+  if (loading) return <p className="text-center mt-5">Cargando...</p>;
+  if (error) return <p className="text-danger text-center mt-5">{error}</p>;
 
   return (
-    <div>
-      <h1>Perfil</h1>
-      <p><strong>Registrado desde:</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
+    <>
+      <Navbar />
+      <div className="d-flex">
+        <ProfileSidebar />
 
-      {/* Formulario de datos del usuario */}
-      <form onSubmit={handleSubmit}>
-        <label>
-          Nombre:
-          <input type="text" name="name" value={formData.name} onChange={handleChange} required />
-        </label>
-        <label>
-          Email:
-          <input type="email" name="email" value={formData.email} onChange={handleChange} required />
-        </label>
-        <button type="submit">Actualizar Perfil</button>
-      </form>
+        {/* Contenido principal */}
+        <div className="container p-4">
+          <h1 className="mb-3">Perfil</h1>
+          <p><strong>Registrado desde:</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
 
-      {/* Formulario de cambio de contraseña */}
-      <h2>Cambiar Contraseña</h2>
-      <form onSubmit={handlePasswordSubmit}>
-        <label>
-          Contraseña Actual:
-          <input type="password" name="currentPassword" value={passwordData.currentPassword} onChange={handlePasswordChange} required />
-        </label>
-        <label>
-          Nueva Contraseña:
-          <input type="password" name="newPassword" value={passwordData.newPassword} onChange={handlePasswordChange} required />
-        </label>
-        <button type="submit">Actualizar Contraseña</button>
-      </form>
+          {/* Formulario de datos del usuario */}
+          <form onSubmit={handleSubmit} className="mb-4 p-3 border rounded shadow-sm bg-white">
+            <h3>Datos Personales</h3>
+            <div className="mb-3">
+              <label className="form-label">Nombre:</label>
+              <input type="text" className="form-control" name="name" value={formData.name} onChange={handleChange} required />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Email:</label>
+              <input type="email" className="form-control" name="email" value={formData.email} onChange={handleChange} required />
+            </div>
+            <button type="submit" className="btn btn-primary w-100">Actualizar Perfil</button>
+          </form>
 
-      {success && <p style={{ color: "green" }}>{success}</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+          {/* Formulario de cambio de contraseña */}
+          <form onSubmit={handlePasswordSubmit} className="p-3 border rounded shadow-sm bg-white">
+            <h3>Cambiar Contraseña</h3>
+            <div className="mb-3">
+              <label className="form-label">Contraseña Actual:</label>
+              <input type="password" className="form-control" name="currentPassword" value={passwordData.currentPassword} onChange={handlePasswordChange} required />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Nueva Contraseña:</label>
+              <input type="password" className="form-control" name="newPassword" value={passwordData.newPassword} onChange={handlePasswordChange} required />
+            </div>
+            <button type="submit" className="btn btn-warning w-100">Actualizar Contraseña</button>
+          </form>
 
-      <button onClick={handleLogout}>Cerrar Sesión</button>
-    </div>
+          {/* Mensajes de éxito o error */}
+          {success && <p className="alert alert-success mt-3">{success}</p>}
+          {error && <p className="alert alert-danger mt-3">{error}</p>}
+        </div>
+      </div>
+    </>
   );
 };
 
