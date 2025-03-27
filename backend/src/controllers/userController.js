@@ -46,61 +46,68 @@ const registerController = async (req, res) => {
         console.log("📌 Iniciando registro de usuario...");
         console.log("📌 Datos recibidos:", req.body);
 
-        const {
-            email,
-            username,
-            password,
-            address,
-            profile_picture,
-            is_selling,
-            bought,
-            favs,
-            cards
-        } = req.body;
+        const { email, username, password, address } = req.body;
 
+        // Validación básica
         if (!email || !username || !password || !address) {
-            console.log("⚠️ Error: Falta algún campo obligatorio.");
-            return res.status(400).json({ ok: false, message: 'Email, usuario, contraseña y dirección son obligatorios' });
+            return res.status(400).json({ 
+                ok: false, 
+                message: 'Email, usuario, contraseña y dirección son obligatorios' 
+            });
         }
 
+        // Verificar usuario existente
         const existingUser = await findUserByEmail(email);
         if (existingUser) {
-            console.log("⚠️ Error: El correo ya está registrado.");
-            return res.status(400).json({ ok: false, message: 'El correo ya está registrado' });
+            return res.status(400).json({ 
+                ok: false, 
+                message: 'El correo ya está registrado' 
+            });
         }
 
+        // Hashear solo la contraseña
         const hashedPassword = await hashData(password);
-        const hashedAddress = await hashData(address);
         const verificationToken = crypto.randomBytes(32).toString("hex");
 
-        console.log("🔐 Password y dirección hasheadas correctamente.");
-
+        // Crear objeto de usuario simplificado
         const userData = {
             email,
             username,
             password: hashedPassword,
-            address: hashedAddress,
-            profile_picture: profile_picture || '',
-            is_selling: is_selling || [],
-            bought: bought || [],
-            favs: favs || [],
-            cards: cards || [],
+            address, // Guardar dirección en texto plano
             verified: false,
-            verification_token: verificationToken
+            verification_token: verificationToken,
+            // Valores por defecto para campos opcionales
+            profile_picture: '',
+            is_selling: [],
+            bought: [],
+            favs: [],
+            cards: []
         };
 
-        console.log("✅ Creando usuario en la base de datos...");
-        await createUser(userData);
-        console.log("✅ Usuario creado con éxito en la base de datos.");
+        // Crear usuario
+        const newUser = await createUser(userData);
+        
+        // Intentar enviar correo (pero no fallar si hay error)
+        try {
+            await sendVerificationEmail(email, verificationToken);
+        } catch (emailError) {
+            console.error("Error enviando correo:", emailError);
+            // No retornes error, solo registra el problema
+        }
 
-        console.log("📧 Enviando correo de verificación...");
-        await sendVerificationEmail(email, verificationToken);
-        console.log("✅ Correo de verificación enviado.");
+        res.status(201).json({ 
+            ok: true, 
+            message: 'Usuario registrado con éxito. Verifica tu correo.' 
+        });
 
-        res.status(201).json({ ok: true, message: 'Usuario registrado con éxito. Verifica tu correo.' });
     } catch (error) {
-        console.error("❌ Error en el registro:", error); // 👈 Esto mostrará más detalles del error
-        res.status(500).json({ ok: false, message: 'Error al registrar el usuario', error: error.message });
+        console.error("❌ Error en el registro:", error);
+        res.status(500).json({ 
+            ok: false, 
+            message: 'Error al registrar el usuario', 
+            error: error.message 
+        });
     }
 };
 
