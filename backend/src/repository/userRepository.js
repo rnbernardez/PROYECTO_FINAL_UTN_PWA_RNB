@@ -13,4 +13,20 @@ const findUserById = async (userId) => {
     return await User.findById(userId).select("-password");
 };
 
-export { findUserByEmail, createUser, findUserById };
+const updateUserVerification = async (email, token) => {
+    return await User.findOneAndUpdate(
+        { email },
+        { verification_token: token },
+        { new: true }
+    );
+};
+
+const verifyUserAccount = async (token) => {
+    return await User.findOneAndUpdate(
+        { verification_token: token },
+        { verified: true, verification_token: null },
+        { new: true }
+    );
+};
+
+export { findUserByEmail, createUser, findUserById, updateUserVerification, verifyUserAccount };
