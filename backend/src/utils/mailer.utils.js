@@ -17,15 +17,15 @@ export const sendVerificationEmail = async (email, token) => {
         const verificationLink = `${process.env.URL_FRONTEND}/user/verify/${token}`;
 
         const mailOptions = {
-            from: process.env.GMAIL_USERNAME,
+            from: `Equipo de Pescado Libre`,
             to: email,
-            subject: "Verifica tu cuenta",
-            html: `...`
+            subject: `Confirma tu email`,
+            text: `Hola ${username},\n\nHaz clic aquí para confirmar tu email:\n${verificationLink}\n\nEl equipo de Pescado Libre`
         };
 
         await transporter.sendMail(mailOptions);
     } catch (error) {
         console.error("Error en sendVerificationEmail:", error);
-        throw error; // Opcional: puedes decidir no lanzar el error
+        throw error; 
     }
 };
