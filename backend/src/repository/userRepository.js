@@ -23,8 +23,14 @@ const updateUserVerification = async (email, token) => {
 
 const verifyUserAccount = async (token) => {
     return await User.findOneAndUpdate(
-        { verification_token: token },
-        { verified: true, verification_token: null },
+        { 
+            [USER_PROPS.VERIFICATION_TOKEN]: token,
+            [USER_PROPS.VERIFIED]: false // Solo actualizar si no está verificado
+        },
+        { 
+            [USER_PROPS.VERIFIED]: true, 
+            [USER_PROPS.VERIFICATION_TOKEN]: null 
+        },
         { new: true }
     );
 };

@@ -3,10 +3,10 @@ import Product from './productModel.js';
 import { hashUserMiddleware } from '../middlewares/hashUserMiddleware.js';
 
 const CardSchema = new mongoose.Schema({
-  cardNumber: { type: String, required: true },
-  expirationDate: { type: String, required: true },
-  cardHolder: { type: String, required: true },
-  cardType: { type: String, enum: ['Visa', 'MasterCard', 'Macro', 'Other'], required: true }
+    cardNumber: { type: String, required: true },
+    expirationDate: { type: String, required: true },
+    cardHolder: { type: String, required: true },
+    cardType: { type: String, enum: ['Visa', 'MasterCard', 'Macro', 'Other'], required: true }
 });
 
 export const USER_PROPS = {

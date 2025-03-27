@@ -12,19 +12,25 @@ const VerifyAccountScreen = () => {
     const verifyAccount = async () => {
       try {
         const response = await axios.get(`/api/user/verify/${token}`);
-        setMessage(response.data.message);
-        setLoading(false);
-        setTimeout(() => {
-          navigate('/user/login'); // Redirige al login después de 3 segundos
-        }, 3000);
+        console.log("Respuesta de verificación:", response.data); // Para debug
+        
+        if (response.data.ok) {
+          setMessage('¡Cuenta verificada con éxito!');
+          // Redirige después de mostrar mensaje
+          setTimeout(() => navigate('/user/login'), 3000);
+        } else {
+          setMessage(response.data.message);
+        }
       } catch (error) {
-        setMessage(error.response ? error.response.data.message : 'Error al verificar');
+        setMessage(error.response?.data?.message || 'Error al verificar');
+        console.error("Error completo:", error);
+      } finally {
         setLoading(false);
       }
     };
 
     verifyAccount();
-  }, [token, navigate]);
+}, [token, navigate]);
 
   if (loading) {
     return <div>Verificando...</div>;

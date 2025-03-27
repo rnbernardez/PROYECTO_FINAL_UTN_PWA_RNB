@@ -118,12 +118,27 @@ const verifyAccountController = async (req, res) => {
         const user = await verifyUserAccount(token);
 
         if (!user) {
-            return res.status(400).json({ ok: false, message: 'Token inválido o ya usado' });
+            return res.status(400).json({ 
+                ok: false, 
+                message: 'Token inválido, ya usado o cuenta ya verificada' 
+            });
         }
 
-        res.status(200).json({ ok: true, message: 'Cuenta verificada con éxito' });
+        res.status(200).json({ 
+            ok: true, 
+            message: 'Cuenta verificada con éxito',
+            user: {
+                email: user.email,
+                verified: user.verified
+            }
+        });
     } catch (error) {
-        res.status(500).json({ ok: false, message: 'Error al verificar cuenta', error: error.message });
+        console.error("Error en verificación:", error);
+        res.status(500).json({ 
+            ok: false, 
+            message: 'Error al verificar cuenta', 
+            error: error.message 
+        });
     }
 };
 
