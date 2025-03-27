@@ -43,25 +43,37 @@ const loginController = async (req, res) => {
 
 const registerController = async (req, res) => {
     try {
-        const { email, username, password, address } = req.body;
-        const profile_picture = req.body.profile_picture || '';
-        const is_selling = req.body.is_selling || [];
-        const bought = req.body.bought || [];
-        const favs = req.body.favs || [];
-        const cards = req.body.cards || [];
+        console.log("📌 Iniciando registro de usuario...");
+        console.log("📌 Datos recibidos:", req.body);
+
+        const {
+            email,
+            username,
+            password,
+            address,
+            profile_picture,
+            is_selling,
+            bought,
+            favs,
+            cards
+        } = req.body;
 
         if (!email || !username || !password || !address) {
+            console.log("⚠️ Error: Falta algún campo obligatorio.");
             return res.status(400).json({ ok: false, message: 'Email, usuario, contraseña y dirección son obligatorios' });
         }
 
         const existingUser = await findUserByEmail(email);
         if (existingUser) {
+            console.log("⚠️ Error: El correo ya está registrado.");
             return res.status(400).json({ ok: false, message: 'El correo ya está registrado' });
         }
 
         const hashedPassword = await hashData(password);
         const hashedAddress = await hashData(address);
         const verificationToken = crypto.randomBytes(32).toString("hex");
+
+        console.log("🔐 Password y dirección hasheadas correctamente.");
 
         const userData = {
             email,
@@ -77,11 +89,17 @@ const registerController = async (req, res) => {
             verification_token: verificationToken
         };
 
+        console.log("✅ Creando usuario en la base de datos...");
         await createUser(userData);
+        console.log("✅ Usuario creado con éxito en la base de datos.");
+
+        console.log("📧 Enviando correo de verificación...");
         await sendVerificationEmail(email, verificationToken);
+        console.log("✅ Correo de verificación enviado.");
 
         res.status(201).json({ ok: true, message: 'Usuario registrado con éxito. Verifica tu correo.' });
     } catch (error) {
+        console.error("❌ Error en el registro:", error); // 👈 Esto mostrará más detalles del error
         res.status(500).json({ ok: false, message: 'Error al registrar el usuario', error: error.message });
     }
 };
