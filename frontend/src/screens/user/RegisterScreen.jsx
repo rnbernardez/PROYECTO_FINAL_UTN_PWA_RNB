@@ -31,7 +31,7 @@ const RegisterScreen = () => {
     setLoading(true);
 
     try {
-      const response = await api.post('/user/register', formState);
+      const response = await api.post('/api/user/register', formState);
 
       if (response.status === 201) {
         setSuccess('Registro exitoso');
@@ -71,7 +71,19 @@ const RegisterScreen = () => {
                 placeholder="Escribe tu usuario"
               />
             </div>
-
+            <div className="mb-3">
+              <label htmlFor="address" className="form-label">Dirección</label>
+              <input
+                type="text"
+                id="address"
+                name="address"
+                className="form-control"
+                value={formState.address}
+                onChange={handleChange}
+                required
+                placeholder="Ingresa tu dirección"
+              />
+            </div>
             <div className="mb-3">
               <label htmlFor="email" className="form-label">Correo electrónico</label>
               <input
