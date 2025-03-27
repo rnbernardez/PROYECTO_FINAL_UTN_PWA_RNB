@@ -114,18 +114,28 @@ const registerController = async (req, res) => {
 const verifyAccountController = async (req, res) => {
     try {
         const { token } = req.params;
+        console.log("🔑 Token recibido:", token);
 
-        const user = await verifyUserAccount(token);
-
-        if (!user) {
-            return res.status(400).json({ 
-                ok: false, 
-                message: 'Token inválido, ya usado o cuenta ya verificada' 
+        if (!token || token.length < 10) {
+            return res.status(400).json({
+                ok: false,
+                message: 'Token de verificación inválido'
             });
         }
 
-        res.status(200).json({ 
-            ok: true, 
+        const user = await verifyUserAccount(token);
+        
+        if (!user) {
+            console.log("⚠️ Token no válido o usuario ya verificado");
+            return res.status(400).json({
+                ok: false,
+                message: 'El enlace de verificación no es válido o ya fue utilizado'
+            });
+        }
+
+        console.log("✅ Usuario verificado:", user.email);
+        return res.status(200).json({
+            ok: true,
             message: 'Cuenta verificada con éxito',
             user: {
                 email: user.email,
@@ -133,11 +143,12 @@ const verifyAccountController = async (req, res) => {
             }
         });
     } catch (error) {
-        console.error("Error en verificación:", error);
-        res.status(500).json({ 
-            ok: false, 
-            message: 'Error al verificar cuenta', 
-            error: error.message 
+        console.error("❌ Error en verifyAccountController:", error);
+        return res.status(500).json({
+            ok: false,
+            message: 'Error interno del servidor al verificar la cuenta',
+            error: error.message,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
         });
     }
 };

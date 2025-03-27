@@ -22,17 +22,32 @@ const updateUserVerification = async (email, token) => {
 };
 
 const verifyUserAccount = async (token) => {
-    return await User.findOneAndUpdate(
-        { 
-            [USER_PROPS.VERIFICATION_TOKEN]: token,
-            [USER_PROPS.VERIFIED]: false // Solo actualizar si no está verificado
-        },
-        { 
-            [USER_PROPS.VERIFIED]: true, 
-            [USER_PROPS.VERIFICATION_TOKEN]: null 
-        },
-        { new: true }
-    );
+    try {
+        console.log("Token recibido en repository:", token);
+        
+        const user = await User.findOneAndUpdate(
+            { 
+                verification_token: token, // Cambiado de [USER_PROPS.VERIFICATION_TOKEN]
+                verified: false           // Cambiado de [USER_PROPS.VERIFIED]
+            },
+            { 
+                $set: { 
+                    verified: true,
+                    verification_token: null 
+                } 
+            },
+            { 
+                new: true,
+                runValidators: true 
+            }
+        );
+        
+        console.log("Usuario actualizado:", user);
+        return user;
+    } catch (error) {
+        console.error("Error en verifyUserAccount:", error);
+        throw error;
+    }
 };
 
 export { findUserByEmail, createUser, findUserById, updateUserVerification, verifyUserAccount };

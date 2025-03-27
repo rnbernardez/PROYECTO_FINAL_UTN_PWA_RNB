@@ -11,27 +11,35 @@ const VerifyAccountScreen = () => {
   useEffect(() => {
     const verifyAccount = async () => {
       try {
-        console.log("Verificando cuenta con token:", token); // Debug
+        console.log("🔍 Iniciando verificación con token:", token);
         
         const response = await api.get(`/api/user/verify/${token}`);
-        console.log("Respuesta del servidor:", response.data); // Debug
+        console.log("📩 Respuesta del servidor:", response.data);
 
         if (response.data.ok) {
-          setMessage('¡Cuenta verificada con éxito! Redirigiendo...');
+          setMessage('✅ ¡Cuenta verificada con éxito! Redirigiendo...');
           setTimeout(() => navigate('/user/login'), 3000);
         } else {
-          setMessage(response.data.message || 'Error al verificar la cuenta');
+          setMessage(`⚠️ ${response.data.message}`);
         }
       } catch (error) {
-        console.error("Error completo:", error.response?.data || error);
-        setMessage(error.response?.data?.message || 'Error al conectar con el servidor');
+        console.error("🔥 Error completo:", {
+          message: error.message,
+          response: error.response?.data
+        });
+        
+        const errorMessage = error.response?.data?.message || 
+                            error.message || 
+                            'Error al conectar con el servidor';
+        
+        setMessage(`❌ ${errorMessage}`);
       } finally {
         setLoading(false);
       }
     };
 
     verifyAccount();
-  }, [token, navigate]);
+}, [token, navigate]);
 
   return (
     <div className="container text-center mt-5">
