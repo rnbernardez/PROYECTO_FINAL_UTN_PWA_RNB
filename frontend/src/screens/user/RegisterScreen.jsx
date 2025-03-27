@@ -35,11 +35,17 @@ const RegisterScreen = () => {
       const response = await api.post('/api/user/register', formState);
 
       if (response.status === 201) {
-        setSuccess('Registro exitoso');
+        setSuccess('¡Registro exitoso! Por favor verifica tu correo electrónico para activar tu cuenta.');
         setFormState(formInitialState);
         setLoading(false);
 
-        navigate('/user/login');
+        // Mostrar alert
+        alert('¡Registro exitoso!\n\nPor favor revisa tu correo electrónico y haz clic en el enlace de verificación para activar tu cuenta.');
+
+        // Redireccionar después de 3 segundos
+        setTimeout(() => {
+          navigate('/user/login');
+        }, 3000);
       }
     } catch (error) {
       setLoading(false);
