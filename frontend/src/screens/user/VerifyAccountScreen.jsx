@@ -1,32 +1,41 @@
-import { useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-const VerifyAccountScreen = ({ match }) => {
-    const { token } = match.params; // Obtenemos el token de la URL
-    const history = useHistory();
+const VerifyAccountScreen = () => {
+  const { token } = useParams(); // Token de la URL
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState('');
 
-    useEffect(() => {
-        const verifyAccount = async () => {
-            try {
-                const response = await fetch(`/api/user/verify/${token}`);
-                const data = await response.json();
+  useEffect(() => {
+    const verifyAccount = async () => {
+      try {
+        const response = await axios.get(`/api/user/verify/${token}`);
+        setMessage(response.data.message);
+        setLoading(false);
+        setTimeout(() => {
+          navigate('/user/login'); // Redirige al login después de 3 segundos
+        }, 3000);
+      } catch (error) {
+        setMessage(error.response ? error.response.data.message : 'Error al verificar');
+        setLoading(false);
+      }
+    };
 
-                if (data.ok) {
-                    setTimeout(() => {
-                        history.push("/login");  // Redirige al Login después de unos segundos
-                    }, 2000); // Espera 2 segundos antes de redirigir
-                } else {
-                    alert(data.message);  // Mostrar mensaje de error
-                }
-            } catch (error) {
-                console.error("Error al verificar la cuenta:", error);
-            }
-        };
+    verifyAccount();
+  }, [token, navigate]);
 
-        verifyAccount();
-    }, [token, history]);
+  if (loading) {
+    return <div>Verificando...</div>;
+  }
 
-    return <div>Tu cuenta ha sido verificada, redirigiendo al login...</div>;
+  return (
+    <div>
+      <h2>{message}</h2>
+      <p>{loading ? 'Cargando...' : 'Por favor espera...'}</p>
+    </div>
+  );
 };
 
 export default VerifyAccountScreen;

@@ -9,7 +9,8 @@ const RegisterScreen = () => {
   const formInitialState = {
     username: '',
     email: '',
-    password: ''
+    password: '',
+    address: ''  
   };
 
   const [formState, setFormState] = useState(formInitialState);
