@@ -3,16 +3,16 @@ import nodemailer from "nodemailer";
 const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD,
+        user: process.env.GMAIL_USERNAME,
+        pass: process.env.GMAIL_PASSWORD,
     },
 });
 
 export const sendVerificationEmail = async (email, token) => {
-    const verificationLink = `${process.env.FRONTEND_URL}/verify/${token}`;
+    const verificationLink = `${process.env.URL_FRONTEND}/user/verify/${token}`;
 
     const mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: process.env.GMAIL_USERNAME,
         to: email,
         subject: "Verifica tu cuenta",
         html: `

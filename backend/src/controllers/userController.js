@@ -43,17 +43,12 @@ const loginController = async (req, res) => {
 
 const registerController = async (req, res) => {
     try {
-        const {
-            email,
-            username,
-            password,
-            address,
-            profile_picture,
-            is_selling,
-            bought,
-            favs,
-            cards
-        } = req.body;
+        const { email, username, password, address } = req.body;
+        const profile_picture = req.body.profile_picture || '';
+        const is_selling = req.body.is_selling || [];
+        const bought = req.body.bought || [];
+        const favs = req.body.favs || [];
+        const cards = req.body.cards || [];
 
         if (!email || !username || !password || !address) {
             return res.status(400).json({ ok: false, message: 'Email, usuario, contraseña y dirección son obligatorios' });
