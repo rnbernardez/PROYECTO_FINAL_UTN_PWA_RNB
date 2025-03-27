@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../api/api.js'; // Usa tu cliente API configurado
 
 const VerifyAccountScreen = () => {
-  const { token } = useParams(); // Token de la URL
+  const { token } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
@@ -11,35 +11,40 @@ const VerifyAccountScreen = () => {
   useEffect(() => {
     const verifyAccount = async () => {
       try {
-        const response = await axios.get(`/api/user/verify/${token}`);
-        console.log("Respuesta de verificación:", response.data); // Para debug
+        console.log("Verificando cuenta con token:", token); // Debug
         
+        const response = await api.get(`/api/user/verify/${token}`);
+        console.log("Respuesta del servidor:", response.data); // Debug
+
         if (response.data.ok) {
-          setMessage('¡Cuenta verificada con éxito!');
-          // Redirige después de mostrar mensaje
+          setMessage('¡Cuenta verificada con éxito! Redirigiendo...');
           setTimeout(() => navigate('/user/login'), 3000);
         } else {
-          setMessage(response.data.message);
+          setMessage(response.data.message || 'Error al verificar la cuenta');
         }
       } catch (error) {
-        setMessage(error.response?.data?.message || 'Error al verificar');
-        console.error("Error completo:", error);
+        console.error("Error completo:", error.response?.data || error);
+        setMessage(error.response?.data?.message || 'Error al conectar con el servidor');
       } finally {
         setLoading(false);
       }
     };
 
     verifyAccount();
-}, [token, navigate]);
-
-  if (loading) {
-    return <div>Verificando...</div>;
-  }
+  }, [token, navigate]);
 
   return (
-    <div>
-      <h2>{message}</h2>
-      <p>{loading ? 'Cargando...' : 'Por favor espera...'}</p>
+    <div className="container text-center mt-5">
+      <h2>Verificando tu cuenta</h2>
+      {loading ? (
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Cargando...</span>
+        </div>
+      ) : (
+        <div className={`alert ${message.includes('éxito') ? 'alert-success' : 'alert-danger'}`}>
+          {message}
+        </div>
+      )}
     </div>
   );
 };
