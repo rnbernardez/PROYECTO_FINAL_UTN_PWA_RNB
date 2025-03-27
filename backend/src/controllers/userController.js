@@ -1,7 +1,7 @@
 import User, { USER_PROPS } from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { comparePasswords, generateToken, hashData } from "../utils/auth.utils.js";
+import { comparePasswords, generateToken } from "../utils/auth.utils.js";
 import { findUserByEmail, createUser, findUserById, updateUserVerification, verifyUserAccount } from '../repository/userRepository.js';
 import { sendVerificationEmail } from "../utils/mailer.utils.js";
 import crypto from "crypto";
