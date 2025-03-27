@@ -2,7 +2,7 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import HomeScreen from './screens/HomeScreen';
 import NotFoundScreen from './screens/NotFoundScreen'; 
-import { LoginScreen, RegisterScreen, ProfileScreen, SuccessfulLoginScreen } from './screens/user';
+import { LoginScreen, RegisterScreen, ProfileScreen, SuccessfulLoginScreen, VerifyAccountScreen } from './screens/user';
 import { ShopScreen, ProductScreen, AddProductScreen } from './screens/shop'; 
 import { CartScreen, AddCardScreen, CheckoutScreen, PurchaseOkScreen } from './screens/cart';
 import RequireAuth from './components/auth/RequireAuth.jsx';
@@ -20,6 +20,7 @@ function App() {
       <Route path="/user">
         <Route path="login" element={<LoginScreen />} />
         <Route path="register" element={<RegisterScreen />} />
+        <Route path="verify/:token" element={<VerifyAccountScreen />} /> {/* Ruta para la verificación de cuenta */}
         <Route element={<ProtectedRoute />}> 
           <Route path="profile" element={<ProfileScreen />} />
           <Route path="successful-login" element={<SuccessfulLoginScreen />} />

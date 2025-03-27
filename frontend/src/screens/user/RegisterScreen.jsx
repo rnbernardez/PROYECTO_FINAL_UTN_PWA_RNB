@@ -43,6 +43,7 @@ const RegisterScreen = () => {
     } catch (error) {
       setLoading(false);
       setError(error.response?.data?.message || 'Error en el registro');
+      console.log(error);
     }
   };
 
