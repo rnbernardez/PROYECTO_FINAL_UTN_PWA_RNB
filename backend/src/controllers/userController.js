@@ -30,7 +30,7 @@ const loginController = async (req, res) => {
 
         const token = jwt.sign(
             { 
-                userId: user._id,
+                userId: user._id,  // Usar userId como clave
                 email: user.email,
                 username: user.username 
             },
