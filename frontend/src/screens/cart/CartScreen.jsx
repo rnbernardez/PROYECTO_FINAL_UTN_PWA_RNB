@@ -5,23 +5,24 @@ import { CartContext } from "../../context/cartContext.jsx";
 const CartScreen = () => {
   const { cart, fetchCart } = useContext(CartContext);
   const [loading, setLoading] = useState(false);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    fetchCart(); // Cargar carrito al abrir la pantalla
-  }, []);
+    if (token) {
+      fetchCart(); // Solo llama a la API si el usuario está autenticado
+    } else {
+      console.warn("No hay usuario autenticado. Redirigiendo al login...");
+      window.location.href = "/user/login"; // Redirige al login si no hay token
+    }
+  }, [token]);
 
   const updateQuantity = async (productId, newQuantity) => {
-    if (newQuantity < 1) return; // Evitar cantidades negativas
+    if (newQuantity < 1) return;
 
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
-      await api.put(
-        "/cart/update",
-        { productId, quantity: newQuantity },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      fetchCart(); // Actualizar carrito después del cambio
+      await api.put("/cart/update", { productId, quantity: newQuantity });
+      fetchCart();
     } catch (error) {
       console.error("Error al actualizar cantidad", error);
     } finally {
@@ -32,11 +33,8 @@ const CartScreen = () => {
   const removeFromCart = async (productId) => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
-      await api.delete(`/cart/remove-product/${productId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      fetchCart(); // Actualizar carrito después de eliminar un producto
+      await api.delete(`/cart/remove-product/${productId}`);
+      fetchCart();
     } catch (error) {
       console.error("Error al eliminar producto", error);
     } finally {
@@ -47,11 +45,8 @@ const CartScreen = () => {
   const clearCart = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
-      await api.delete("/cart/clear", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      fetchCart(); // Actualizar carrito después de vaciarlo
+      await api.delete("/cart/clear");
+      fetchCart();
     } catch (error) {
       console.error("Error al vaciar el carrito", error);
     } finally {
@@ -62,13 +57,8 @@ const CartScreen = () => {
   const addToCart = async (productId) => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
-      await api.post(
-        "/cart/add-product",
-        { productId, quantity: 1 },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      fetchCart(); // Actualizar carrito después de agregar un producto
+      await api.post("/cart/add-product", { productId, quantity: 1 });
+      fetchCart();
     } catch (error) {
       console.error("Error al agregar producto al carrito", error);
     } finally {
@@ -80,9 +70,7 @@ const CartScreen = () => {
     return (
       <div>
         <p>El carrito está vacío</p>
-        <button onClick={() => addToCart("some-product-id")}>
-          ➕ Agregar Producto
-        </button>
+        <button onClick={() => addToCart("some-product-id")}>➕ Agregar Producto</button>
       </div>
     );
 
@@ -95,12 +83,8 @@ const CartScreen = () => {
           <p>Precio: {item.product.price} USD</p>
           <p>Cantidad: {item.quantity}</p>
 
-          <button onClick={() => updateQuantity(item.product._id, item.quantity + 1)}>
-            ➕
-          </button>
-          <button onClick={() => updateQuantity(item.product._id, item.quantity - 1)}>
-            ➖
-          </button>
+          <button onClick={() => updateQuantity(item.product._id, item.quantity + 1)}>➕</button>
+          <button onClick={() => updateQuantity(item.product._id, item.quantity - 1)}>➖</button>
 
           <button onClick={() => removeFromCart(item.product._id)}>❌ Eliminar</button>
         </div>

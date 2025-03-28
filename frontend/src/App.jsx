@@ -44,8 +44,8 @@ function App() {
         <Route path="add-product" element={<RequireAuth><AddProductScreen /></RequireAuth>} />
       </Route>
 
-      <Route path="/cart">
-      <Route element={<ProtectedRoute />}> 
+      <Route element={<ProtectedRoute />}>
+      <Route path="/cart" element={<RequireAuth><CartScreen /></RequireAuth>}>
         <Route index element={<CartScreen />} />
         <Route path="add-card" element={<RequireAuth><AddCardScreen /></RequireAuth>} />
         <Route path="checkout" element={<RequireAuth><CheckoutScreen /></RequireAuth>} />

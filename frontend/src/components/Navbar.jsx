@@ -9,25 +9,22 @@ function Navbar() {
 
   // Cargar datos del usuario y carrito al montar el componente
   useEffect(() => {
-    // Verificar usuario logueado
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
 
-    // Cargar carrito y contar productos
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
     setCartCount(cart.length);
   }, []);
 
-  // Escuchar cambios en el carrito (cuando se actualiza en localStorage)
+  // Escuchar cambios en el carrito
   useEffect(() => {
     const handleStorageChange = () => {
       const cart = JSON.parse(localStorage.getItem("cart")) || [];
       setCartCount(cart.length);
     };
 
-    // Agregar evento para escuchar cambios en localStorage
     window.addEventListener("storage", handleStorageChange);
     return () => {
       window.removeEventListener("storage", handleStorageChange);
@@ -51,15 +48,12 @@ function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container">
-        {/* Nombre del E-commerce */}
         <Link className="navbar-brand" to="/">Pescado Libre</Link>
 
-        {/* Botón de menú en dispositivos móviles */}
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        {/* Contenido de la Navbar */}
         <div className="collapse navbar-collapse" id="navbarNav">
           <form className="d-flex mx-auto" onSubmit={handleSearch}>
             <input
@@ -74,15 +68,16 @@ function Navbar() {
           </form>
 
           <ul className="navbar-nav ms-auto">
-            {/* Carrito de compras con contador */}
-            <li className="nav-item mx-2">
-              <Link className="nav-link" to="/cart">
-                <i className="bi bi-cart-fill me-1"></i> Carrito
-                {cartCount > 0 && <span className="badge bg-danger ms-1">{cartCount}</span>}
-              </Link>
-            </li>
+            {/* SOLO mostrar el carrito si el usuario está autenticado */}
+            {user && (
+              <li className="nav-item mx-2">
+                <Link className="nav-link" to="/cart">
+                  <i className="bi bi-cart-fill me-1"></i> Carrito
+                  {cartCount > 0 && <span className="badge bg-danger ms-1">{cartCount}</span>}
+                </Link>
+              </li>
+            )}
 
-            {/* Si el usuario está logueado, mostramos su nombre y el botón de cerrar sesión */}
             {user ? (
               <>
                 <li className="nav-item mx-2">
@@ -94,7 +89,6 @@ function Navbar() {
               </>
             ) : (
               <>
-                {/* Si NO está logueado, mostramos los enlaces de login y registro */}
                 <li className="nav-item mx-2">
                   <Link className="nav-link" to="/user/register">Registrarse</Link>
                 </li>
