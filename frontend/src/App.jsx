@@ -45,10 +45,12 @@ function App() {
       </Route>
 
       <Route path="/cart">
+      <Route element={<ProtectedRoute />}> 
         <Route index element={<CartScreen />} />
         <Route path="add-card" element={<RequireAuth><AddCardScreen /></RequireAuth>} />
         <Route path="checkout" element={<RequireAuth><CheckoutScreen /></RequireAuth>} />
         <Route path="purchaseok" element={<RequireAuth><PurchaseOkScreen /></RequireAuth>} />
+        </Route>
       </Route>
 
       <Route path="*" element={<NotFoundScreen />} />
