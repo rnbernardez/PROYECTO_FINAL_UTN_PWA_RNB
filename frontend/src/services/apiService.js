@@ -1,6 +1,6 @@
 import api from "../api/api.js";
 
-// Servicios de Autenticación
+// Servicios de Autenticac
 export const login = (userData) => api.post("/api/user/login", userData);
 export const register = (userData) => api.post("/api/user/register", userData);
 export const getProfile = () => api.get("/api/user/profile");
