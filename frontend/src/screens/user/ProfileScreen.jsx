@@ -17,18 +17,21 @@ const ProfileScreen = () => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await api.get("/user/profile", {
+        const response = await api.get("/api/user/profile", {  // Cambié "/user/profile" a "/api/user/profile"
           headers: { Authorization: `Bearer ${token}` },
         });
         setUser(response.data.user);
-        setFormData({ username: response.data.user.username, email: response.data.user.email });
+        setFormData({ 
+          username: response.data.user.username, 
+          email: response.data.user.email 
+        });
       } catch (error) {
         setError(error.response?.data?.message || "Error al obtener perfil");
       } finally {
         setLoading(false);
       }
     };
-
+  
     if (token) {
       fetchUserProfile();
     } else {
