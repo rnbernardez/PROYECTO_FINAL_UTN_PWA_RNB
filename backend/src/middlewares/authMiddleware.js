@@ -16,7 +16,13 @@ export const authMiddleware = (request, response, next) => {
         }
 
         const user_info = verifyToken(authorization_token);
+        
+        // Asegúrate que el user_info contenga el ID
+        if (!user_info?.id) {
+            throw new ServerError('Token inválido: falta información de usuario', 401);
+        }
 
+        // Asigna el objeto de usuario completo
         request.user = user_info;
 
         next();

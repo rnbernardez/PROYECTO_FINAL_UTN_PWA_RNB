@@ -28,7 +28,15 @@ const loginController = async (req, res) => {
             return res.status(401).json({ ok: false, message: 'Contraseña incorrecta' });
         }
 
-        const token = generateToken(user);
+        const token = jwt.sign(
+            { 
+                userId: user._id,
+                email: user.email,
+                username: user.username 
+            },
+            process.env.JWT_SECRET_KEY,
+            { expiresIn: process.env.JWT_EXPIRES_IN }
+        );
 
         return res.status(200).json({ 
             ok: true, 
