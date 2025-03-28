@@ -30,11 +30,12 @@ const loginController = async (req, res) => {
 
         const token = jwt.sign(
             { 
-                userId: user._id.toString(), // Asegúrate que sea ._id y esté convertido a string
-                email: user.email
+                id: user._id.toString(), // Asegúrate que sea 'id' (no 'userId')
+                email: user.email,
+                username: user.username
             },
             process.env.JWT_SECRET_KEY,
-            { expiresIn: '1h' }
+            { expiresIn: process.env.JWT_EXPIRES_IN }
         );
 
         return res.status(200).json({ 
@@ -156,7 +157,7 @@ const verifyAccountController = async (req, res) => {
 const profileController = async (req, res) => {
     try {
         console.log("Usuario en request:", req.user); // Debug 1
-        const userId = req.user?.userId; // Cambiado de .id a .userId
+        const userId = req.user?.id
         
         if (!userId) {
             console.log("Falta userId en el token"); // Debug 2
