@@ -30,12 +30,11 @@ const loginController = async (req, res) => {
 
         const token = jwt.sign(
             { 
-                userId: user._id,  // Usar userId como clave
-                email: user.email,
-                username: user.username 
+                userId: user._id.toString(), // Asegúrate que sea ._id y esté convertido a string
+                email: user.email
             },
             process.env.JWT_SECRET_KEY,
-            { expiresIn: process.env.JWT_EXPIRES_IN }
+            { expiresIn: '1h' }
         );
 
         return res.status(200).json({ 
@@ -156,9 +155,11 @@ const verifyAccountController = async (req, res) => {
 
 const profileController = async (req, res) => {
     try {
-        const userId = req.user?.id; // Añadí opcional chaining por seguridad
+        console.log("Usuario en request:", req.user); // Debug 1
+        const userId = req.user?.userId; // Cambiado de .id a .userId
         
         if (!userId) {
+            console.log("Falta userId en el token"); // Debug 2
             return res.status(400).json({ ok: false, message: "ID de usuario no proporcionado" });
         }
 
@@ -168,15 +169,13 @@ const profileController = async (req, res) => {
             return res.status(404).json({ ok: false, message: "Usuario no encontrado" });
         }
 
-        return res.json({
-            ok: true,
-            user
-        });
+        return res.json({ ok: true, user });
     } catch (error) {
-        console.error("Error en profileController:", error);
+        console.error("Error en profileController:", error); // Debug 3
         return res.status(500).json({ 
             ok: false,
-            message: "Error interno del servidor"
+            message: "Error interno del servidor",
+            error: error.message // Solo para desarrollo
         });
     }
 };
