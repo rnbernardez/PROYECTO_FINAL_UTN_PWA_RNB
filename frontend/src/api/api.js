@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://proyecto-final-utn-pwa-rnb.onrender.com/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://proyecto-final-utn-pwa-rnb.onrender.com';
 
 const api = axios.create({
-  baseURL: API_BASE_URL.endsWith('/api') ? API_BASE_URL : `${API_BASE_URL}/api`,
+  baseURL: API_BASE_URL, // Asegúrate que NO termine con /api
   headers: {
     "Content-Type": "application/json",
   },
