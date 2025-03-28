@@ -148,7 +148,12 @@ const verifyAccountController = async (req, res) => {
 
 const profileController = async (req, res) => {
     try {
-        const userId = req.user.id;
+        const userId = req.user?.id; // Añadí opcional chaining por seguridad
+        
+        if (!userId) {
+            return res.status(400).json({ ok: false, message: "ID de usuario no proporcionado" });
+        }
+
         const user = await findUserById(userId).select('-password');
         
         if (!user) {
@@ -157,15 +162,13 @@ const profileController = async (req, res) => {
 
         return res.json({
             ok: true,
-            message: "Perfil obtenido correctamente",
             user
         });
     } catch (error) {
         console.error("Error en profileController:", error);
         return res.status(500).json({ 
-            ok: false, 
-            message: "Error al obtener el perfil",
-            error: error.message 
+            ok: false,
+            message: "Error interno del servidor"
         });
     }
 };

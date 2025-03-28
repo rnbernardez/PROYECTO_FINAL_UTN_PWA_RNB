@@ -1,11 +1,11 @@
-import api from './api'; // Usa tu instancia configurada de axios
+import api from './api';
 
 export const getCart = async () => {
-    return await api.get("/cart"); // Cambia a ruta relativa (sin /api)
+    return await api.get("/api/cart"); // Asegúrate que sea EXACTAMENTE esta ruta
 };
 
 export const checkout = async () => {
-    return await api.post("/cart/checkout", {}); // Usa la instancia api que ya tiene el token
+    return await api.post("/api/cart/checkout", {});
 };
 
 /*import axios from "axios";
