@@ -12,8 +12,7 @@ const ProfileScreen = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
-  const [formData, setFormData] = useState({ name: "", email: "" });
-  const [passwordData, setPasswordData] = useState({ currentPassword: "", newPassword: "" });
+  const [formData, setFormData] = useState({ username: "", email: "" });
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -22,7 +21,7 @@ const ProfileScreen = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUser(response.data.user);
-        setFormData({ name: response.data.user.name, email: response.data.user.email });
+        setFormData({ username: response.data.user.username, email: response.data.user.email });
       } catch (error) {
         setError(error.response?.data?.message || "Error al obtener perfil");
       } finally {
@@ -42,10 +41,6 @@ const ProfileScreen = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handlePasswordChange = (e) => {
-    setPasswordData({ ...passwordData, [e.target.name]: e.target.value });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSuccess(null);
@@ -54,31 +49,13 @@ const ProfileScreen = () => {
     try {
       const response = await api.put(
         "/user/profile",
-        { name: formData.name, email: formData.email },
+        { username: formData.username, email: formData.email },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setUser(response.data.user);
       setSuccess("Perfil actualizado correctamente");
     } catch (error) {
       setError(error.response?.data?.message || "Error al actualizar perfil");
-    }
-  };
-
-  const handlePasswordSubmit = async (e) => {
-    e.preventDefault();
-    setSuccess(null);
-    setError(null);
-
-    try {
-      await api.put(
-        "/user/change-password",
-        { currentPassword: passwordData.currentPassword, newPassword: passwordData.newPassword },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setSuccess("Contraseña actualizada correctamente");
-      setPasswordData({ currentPassword: "", newPassword: "" });
-    } catch (error) {
-      setError(error.response?.data?.message || "Error al cambiar la contraseña");
     }
   };
 
@@ -91,17 +68,15 @@ const ProfileScreen = () => {
       <div className="d-flex">
         <ProfileSidebar />
 
-        {/* Contenido principal */}
         <div className="container p-4">
           <h1 className="mb-3">Perfil</h1>
           <p><strong>Registrado desde:</strong> {new Date(user.createdAt).toLocaleDateString()}</p>
 
-          {/* Formulario de datos del usuario */}
           <form onSubmit={handleSubmit} className="mb-4 p-3 border rounded shadow-sm bg-white">
             <h3>Datos Personales</h3>
             <div className="mb-3">
-              <label className="form-label">Nombre:</label>
-              <input type="text" className="form-control" name="name" value={formData.name} onChange={handleChange} required />
+              <label className="form-label">Nombre de usuario:</label>
+              <input type="text" className="form-control" name="username" value={formData.username} onChange={handleChange} required />
             </div>
             <div className="mb-3">
               <label className="form-label">Email:</label>
@@ -110,21 +85,6 @@ const ProfileScreen = () => {
             <button type="submit" className="btn btn-primary w-100">Actualizar Perfil</button>
           </form>
 
-          {/* Formulario de cambio de contraseña */}
-          <form onSubmit={handlePasswordSubmit} className="p-3 border rounded shadow-sm bg-white">
-            <h3>Cambiar Contraseña</h3>
-            <div className="mb-3">
-              <label className="form-label">Contraseña Actual:</label>
-              <input type="password" className="form-control" name="currentPassword" value={passwordData.currentPassword} onChange={handlePasswordChange} required />
-            </div>
-            <div className="mb-3">
-              <label className="form-label">Nueva Contraseña:</label>
-              <input type="password" className="form-control" name="newPassword" value={passwordData.newPassword} onChange={handlePasswordChange} required />
-            </div>
-            <button type="submit" className="btn btn-warning w-100">Actualizar Contraseña</button>
-          </form>
-
-          {/* Mensajes de éxito o error */}
           {success && <p className="alert alert-success mt-3">{success}</p>}
           {error && <p className="alert alert-danger mt-3">{error}</p>}
         </div>
