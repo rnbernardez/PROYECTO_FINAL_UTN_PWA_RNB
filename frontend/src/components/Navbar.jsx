@@ -48,14 +48,21 @@ function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container">
-        <Link className="navbar-brand" to="/">Pescado Libre</Link>
+        <Link className="navbar-brand" to="/">
+        Pescado Libre
+        <img
+            src="/public/images/LogoPL.png"
+            alt="Logo"
+            style={{ width: "30px", marginLeft: "10px" }}
+          />
+        </Link>
 
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
           <span className="navbar-toggler-icon"></span>
         </button>
-
+        
         <div className="collapse navbar-collapse" id="navbarNav">
-          <form className="d-flex mx-auto" onSubmit={handleSearch}>
+          {/*Buscador<form className="d-flex mx-auto" onSubmit={handleSearch}>
             <input
               className="form-control me-2"
               type="search"
@@ -65,7 +72,7 @@ function Navbar() {
               onChange={(e) => setSearch(e.target.value)}
             />
             <button className="btn btn-outline-light" type="submit">Buscar</button>
-          </form>
+          </form>*/}
 
           <ul className="navbar-nav ms-auto">
             {/* SOLO mostrar el carrito si el usuario está autenticado */}
