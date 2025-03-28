@@ -1,3 +1,22 @@
+import { Routes, Route } from 'react-router-dom';
+import useAuth from './hooks/useAuth.js';
+import HomeScreen from './screens/HomeScreen.jsx';
+import VerifyAccountScreen from './screens/user/VerifyAccountScreen.jsx';
+import LoginScreen from './screens/user/LoginScreen.jsx';
+import RegisterScreen from './screens/user/RegisterScreen.jsx';
+import ProfileScreen from './screens/user/ProfileScreen.jsx';
+import SuccessfulLoginScreen from './screens/user/SuccessfulLoginScreen.jsx';
+import ShopScreen from './screens/shop/ShopScreen.jsx';
+import ProductScreen from './screens/shop/ProductScreen.jsx';
+import AddProductScreen from './screens/shop/AddProductScreen.jsx';
+import CartScreen from './screens/cart/CartScreen.jsx';
+import AddCardScreen from './screens/cart/AddCardScreen.jsx';
+import CheckoutScreen from './screens/cart/CheckoutScreen.jsx';
+import PurchaseOkScreen from './screens/cart/PurchaseOkScreen.jsx';
+import NotFoundScreen from './screens/NotFoundScreen.jsx';
+import ProtectedRoute from './components/auth/ProtectedRoute.jsx';
+import RequireAuth from './components/auth/RequireAuth.jsx';
+
 function App() {
   const { user } = useAuth();
   return (
