@@ -148,10 +148,9 @@ const verifyAccountController = async (req, res) => {
 
 const profileController = async (req, res) => {
     try {
-        const userId = req.user.id; 
-
+        const userId = req.user.id;
         const user = await findUserById(userId).select('-password');
-
+        
         if (!user) {
             return res.status(404).json({ ok: false, message: "Usuario no encontrado" });
         }
@@ -162,7 +161,12 @@ const profileController = async (req, res) => {
             user
         });
     } catch (error) {
-        return res.status(500).json({ ok: false, message: "Error al obtener el perfil" });
+        console.error("Error en profileController:", error);
+        return res.status(500).json({ 
+            ok: false, 
+            message: "Error al obtener el perfil",
+            error: error.message 
+        });
     }
 };
 
