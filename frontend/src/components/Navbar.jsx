@@ -7,7 +7,7 @@ function Navbar() {
   const [cartCount, setCartCount] = useState(0);
   const navigate = useNavigate();
 
-  // Cargar datos del usuario y carrito al montar el componente
+  
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -18,7 +18,7 @@ function Navbar() {
     setCartCount(cart.length);
   }, []);
 
-  // Escuchar cambios en el carrito
+  
   useEffect(() => {
     const handleStorageChange = () => {
       const cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -61,8 +61,7 @@ function Navbar() {
           <span className="navbar-toggler-icon"></span>
         </button>
         
-        <div className="collapse navbar-collapse" id="navbarNav">
-          {/*Buscador<form className="d-flex mx-auto" onSubmit={handleSearch}>
+        {/*Buscador<form className="d-flex mx-auto" onSubmit={handleSearch}>
             <input
               className="form-control me-2"
               type="search"
@@ -74,8 +73,8 @@ function Navbar() {
             <button className="btn btn-outline-light" type="submit">Buscar</button>
           </form>*/}
 
+        <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
-            {/* SOLO mostrar el carrito si el usuario está autenticado */}
             {user && (
               <li className="nav-item mx-2">
                 <Link className="nav-link" to="/cart">

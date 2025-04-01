@@ -31,7 +31,7 @@ const AddCardScreen = () => {
       });
 
       setSuccess(response.data.message);
-      setCardData({ cardNumber: '', expirationDate: '', cardHolder: '', cardType: '' }); // Limpiar formulario
+      setCardData({ cardNumber: '', expirationDate: '', cardHolder: '', cardType: '' }); 
     } catch (error) {
       setError(error.response?.data?.message || "Hubo un problema al agregar la tarjeta.");
     } finally {

@@ -27,8 +27,8 @@ const verifyUserAccount = async (token) => {
         
         const user = await User.findOneAndUpdate(
             { 
-                verification_token: token, // Cambiado de [USER_PROPS.VERIFICATION_TOKEN]
-                verified: false           // Cambiado de [USER_PROPS.VERIFIED]
+                verification_token: token,
+                verified: false           
             },
             { 
                 $set: { 

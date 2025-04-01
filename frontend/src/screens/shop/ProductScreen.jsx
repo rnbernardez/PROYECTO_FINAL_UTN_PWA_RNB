@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../../api/api.js';
-import { CartContext } from '@/context/cartContext.jsx'; // Importamos el contexto del carrito
+import { CartContext } from '@/context/cartContext.jsx';
 
 const ProductScreen = () => {
-  const { id } = useParams(); // Capturamos el ID del producto desde la URL
+  const { id } = useParams(); 
   const [product, setProduct] = useState(null);
   const [error, setError] = useState(null);
-  const { fetchCart } = useContext(CartContext); // Accedemos a la función para actualizar el carrito
+  const { fetchCart } = useContext(CartContext); 
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
@@ -16,7 +16,7 @@ const ProductScreen = () => {
       try {
         const response = await api.get(`/shop/product/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
-        }); // Llamada a la API
+        }); 
         setProduct(response.data.product);
       } catch (error) {
         setError("Error al obtener el producto");
@@ -32,7 +32,7 @@ const ProductScreen = () => {
       await api.post("/cart/cart/add-product", { productId: product._id, quantity: 1 }, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      fetchCart(); // Actualizamos el carrito en el contexto
+      fetchCart(); 
       alert("Producto agregado al carrito");
     } catch (error) {
       console.error("Error al agregar al carrito", error);
@@ -44,7 +44,7 @@ const ProductScreen = () => {
         await api.delete(`/shop/products/${product._id}`, {
             headers: { Authorization: `Bearer ${token}` },
         });
-        navigate("/shop"); // Redirigir al usuario a la tienda después de eliminar el producto
+        navigate("/shop"); 
         alert("Producto eliminado exitosamente");
     } catch (error) {
         setError("Error al eliminar el producto");
@@ -54,8 +54,7 @@ const ProductScreen = () => {
 
   if (!product) return <p>Cargando...</p>;
 
-  // Verificamos si el producto fue creado por el usuario autenticado
-  const isProductOwner = product.createdBy === token; // O usar el userId del token
+  const isProductOwner = product.createdBy === token; 
 
   return (
     <div>

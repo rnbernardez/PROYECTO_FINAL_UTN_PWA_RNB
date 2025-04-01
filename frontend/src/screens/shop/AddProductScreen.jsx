@@ -20,9 +20,9 @@ const AddProductScreen = () => {
     e.preventDefault();
 
     try {
-      const token = localStorage.getItem("token"); // Tomamos el token del usuario
+      const token = localStorage.getItem("token"); 
       const response = await api.post("/shop/add-product", product, {
-        headers: { Authorization: `Bearer ${token}` }, // Enviamos el token en la petición
+        headers: { Authorization: `Bearer ${token}` }, 
       });
 
       console.log("Producto agregado:", response.data);

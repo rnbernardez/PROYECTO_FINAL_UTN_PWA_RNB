@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Navbar from '../components/Navbar'; // Importamos la Navbar
+import Navbar from '../components/Navbar';
 
 const NotFoundScreen = () => {
   return (
     <>
-      <Navbar /> {/* Navbar agregada */}
+      <Navbar /> 
 
       <div className="container d-flex flex-column align-items-center justify-content-center vh-100 text-center">
         <h1 className="display-1 fw-bold text-danger">404</h1>

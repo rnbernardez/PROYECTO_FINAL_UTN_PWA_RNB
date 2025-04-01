@@ -21,9 +21,7 @@ function App() {
   const { user } = useAuth();
   return (
     <Routes>
-      <Route path="/" element={<HomeScreen />} /> {/* Cambio clave aquí */}
-      
-      {/* Rutas existentes sin modificar */}
+      <Route path="/" element={<HomeScreen />} /> 
       <Route path="/home" element={<HomeScreen />} />
       <Route path="/verify/:token" element={<VerifyAccountScreen />} />
       
@@ -37,7 +35,6 @@ function App() {
         </Route>
       </Route>
 
-      {/* Resto de tus rutas exactamente como están */}
       <Route path="/shop">
         <Route index element={<ShopScreen />} />
         <Route path="product/:id" element={<ProductScreen />} />

@@ -6,7 +6,7 @@ const PurchaseOkScreen = () => {
   const { fetchCart } = useContext(CartContext);
 
   useEffect(() => {
-    fetchCart(); // Asegurar que el carrito se vació correctamente
+    fetchCart(); 
   }, []);
 
   return (

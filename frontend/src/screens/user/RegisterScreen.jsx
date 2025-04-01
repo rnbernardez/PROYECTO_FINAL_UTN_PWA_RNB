@@ -39,10 +39,8 @@ const RegisterScreen = () => {
         setFormState(formInitialState);
         setLoading(false);
 
-        // Mostrar alert
         alert('¡Registro exitoso!\n\nPor favor revisa tu correo electrónico y haz clic en el enlace de verificación para activar tu cuenta.');
 
-        // Redireccionar después de 3 segundos
         setTimeout(() => {
           navigate('/user/login');
         }, 3000);

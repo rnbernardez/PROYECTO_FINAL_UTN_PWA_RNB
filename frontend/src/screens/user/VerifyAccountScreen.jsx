@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import api from '../../api/api.js'; // Usa tu cliente API configurado
+import api from '../../api/api.js'; 
 
 const VerifyAccountScreen = () => {
   const { token } = useParams();

@@ -9,7 +9,6 @@ const api = axios.create({
   },
 });
 
-// Interceptor para agregar el token a todas las solicitudes
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
@@ -21,7 +20,6 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Interceptor para manejar errores de autenticación
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -29,7 +27,7 @@ api.interceptors.response.use(
     if (error.response?.status === 401) {
       console.warn("Sesión expirada o usuario no autenticado. Redirigiendo al login...");
       localStorage.removeItem("token");
-      window.location.href = "/user/login"; // Redirigir a la pantalla de login
+      window.location.href = "/user/login";
     }
     return Promise.reject(error);
   }

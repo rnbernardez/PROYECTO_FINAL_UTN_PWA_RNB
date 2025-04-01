@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { login } from '../../services/apiService';
-import Navbar from '../../components/Navbar'; // Importamos la Navbar
+import Navbar from '../../components/Navbar'; 
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');

@@ -30,7 +30,7 @@ const loginController = async (req, res) => {
 
         const token = jwt.sign(
             { 
-                id: user._id.toString(), // Asegúrate que sea 'id' (no 'userId')
+                id: user._id.toString(),
                 email: user.email,
                 username: user.username
             },
@@ -74,11 +74,11 @@ const registerController = async (req, res) => {
 
         const verificationToken = crypto.randomBytes(32).toString("hex");
 
-        // Envía la contraseña en texto plano (el middleware la hasheará)
+        
         const userData = {
             email,
             username,
-            password, // <-- Cambio clave aquí
+            password, 
             address,
             verified: false,
             verification_token: verificationToken,
@@ -156,11 +156,11 @@ const verifyAccountController = async (req, res) => {
 
 const profileController = async (req, res) => {
     try {
-        console.log("Usuario en request:", req.user); // Debug 1
+        console.log("Usuario en request:", req.user); 
         const userId = req.user?.id
         
         if (!userId) {
-            console.log("Falta userId en el token"); // Debug 2
+            console.log("Falta userId en el token"); 
             return res.status(400).json({ ok: false, message: "ID de usuario no proporcionado" });
         }
 
@@ -172,11 +172,11 @@ const profileController = async (req, res) => {
 
         return res.json({ ok: true, user });
     } catch (error) {
-        console.error("Error en profileController:", error); // Debug 3
+        console.error("Error en profileController:", error); 
         return res.status(500).json({ 
             ok: false,
             message: "Error interno del servidor",
-            error: error.message // Solo para desarrollo
+            error: error.message
         });
     }
 };

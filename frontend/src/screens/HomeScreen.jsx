@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { fetchAllProducts } from '../services/apiService';
-import Navbar from '../components/Navbar.jsx'; // Importamos la Navbar
+import Navbar from '../components/Navbar.jsx'; 
 
 const HomeScreen = () => {
   const [products, setProducts] = useState([]);
@@ -24,7 +24,7 @@ const HomeScreen = () => {
 
   return (
     <>
-      <Navbar /> {/* Navbar agregada */}
+      <Navbar /> 
       
       <div className="container mt-4">
         <header className="text-center mb-4">

@@ -9,10 +9,10 @@ const CartScreen = () => {
 
   useEffect(() => {
     if (token) {
-      fetchCart(); // Solo llama a la API si el usuario está autenticado
+      fetchCart();
     } else {
       console.warn("No hay usuario autenticado. Redirigiendo al login...");
-      window.location.href = "/user/login"; // Redirige al login si no hay token
+      window.location.href = "/user/login";
     }
   }, [token]);
 

@@ -1,27 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../api/api.js';
-import { Link } from 'react-router-dom'; // Usamos Link para redirigir a la página de detalles del producto
+import { Link } from 'react-router-dom'; 
 
 const ShopScreen = () => {
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true); // Estado para mostrar el cargando
-  const [error, setError] = useState(null); // Estado para los errores
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await api.get("/shop"); // Llamada a la API para obtener los productos
-        setProducts(response.data); // Guardamos los productos en el estado
+        const response = await api.get("/shop");
+        setProducts(response.data);
       } catch (error) {
         setError("Hubo un error al cargar los productos");
         console.error("Error al obtener los productos", error);
       } finally {
-        setLoading(false); // Terminamos de cargar los productos
+        setLoading(false);
       }
     };
 
     fetchProducts();
-  }, []); // Este hook solo se ejecuta una vez al montar el componente
+  }, []);
 
   if (loading) return <p>Cargando productos...</p>;
 

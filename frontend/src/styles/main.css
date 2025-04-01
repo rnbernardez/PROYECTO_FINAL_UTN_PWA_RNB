@@ -8,9 +8,9 @@ body {
 }
 
 h1, h2, h3 {
-  font-weight: 700; /* Negrita */
+  font-weight: 700; 
 }
 
 p, a, button {
-  font-weight: 400; /* Normal */
+  font-weight: 400; 
 }

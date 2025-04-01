@@ -1,4 +1,4 @@
-import api from '../api/api.js'; // Importamos la instancia de axios configurada
+import api from '../api/api.js'; 
 
 export const updateUserField = async (field, value) => {
   try {

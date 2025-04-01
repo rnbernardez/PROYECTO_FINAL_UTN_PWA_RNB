@@ -10,7 +10,6 @@ const ProfileSidebar = () => {
 
   return (
     <div className="d-flex flex-column flex-shrink-0 p-3 bg-light vh-100 sidebar">
-      {/* Botón para móviles */}
       <button 
         className="btn btn-outline-dark d-lg-none mb-3" 
         type="button" 
@@ -20,7 +19,6 @@ const ProfileSidebar = () => {
         ☰ Menú
       </button>
 
-      {/* Sidebar */}
       <div className="collapse d-lg-block" id="sidebarMenu">
         <h4 className="text-center">Mi Cuenta</h4>
         <ul className="nav nav-pills flex-column mb-auto">
